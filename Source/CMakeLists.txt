@@ -7,6 +7,14 @@ set(SOURCE_FILES
     Main.cpp
     MainComponent.cpp
     Oscillateur.cpp
-    Oscillateur.h Midi.cpp Midi.h)
+    Oscillateur.h
+    Midi.cpp
+    Midi.h
+    Synthesizer.cpp
+    Synthesizer.h
+    Voice.cpp
+    Voice.h
+    Envelope.cpp
+    Envelope.h)
 
 add_executable(Source ${SOURCE_FILES})

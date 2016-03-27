@@ -2,6 +2,8 @@
 #define MIDI_H
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "VoicesVector.h"
+
 
 // Basé sur: https://www.juce.com/doc/tutorial_handling_midi_events
 class Midi : public Component,
@@ -14,9 +16,10 @@ public:
     ~Midi();
 
     void resized() override;
-    int getMidiNote() const;
-    bool isNotePlaying() const;
-    void resetKeyboardState();
+    //const std::vector<bool>& getMidiNotes();
+    int getNumberOfKeyboardNotes() const;
+
+    inline void setVoicesVector(VoicesVector* v) { _voices = v; } // sketch
 
     void setFocus();
 
@@ -100,8 +103,7 @@ private:
 
         const String description (getMidiMessageDescription (message));
         const String noteNumber (message.getNoteNumber());
-        float test = 440.f * std::pow(2.f, (message.getNoteNumber() - 69) / 12.f);
-        const String frequency (test);
+        const String frequency (440.0 * std::pow(2.0, double(message.getNoteNumber() - 81) / 12.0));
 
         const String midiMessageString (timecode + "  -  " + description + " (" + source + ")" + " Note: " + noteNumber + " f: " + frequency + " Hz"); // [7]
         logMessage (midiMessageString);
@@ -120,8 +122,12 @@ private:
     TextEditor midiMessagesBox;
     double startTime;
 
-    int _midiNote;
-    bool _noteOn;
+
+    VoicesVector* _voices;
+
+    //int _midiNote;
+    //bool _noteOn;
+    //std::vector<bool> _midiNotesOn;
 };
 
 

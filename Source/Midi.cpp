@@ -3,9 +3,7 @@
 Midi::Midi() : lastInputIndex(0),
                isAddingFromMidiInput(false),
                keyboardComponent(keyboardState, MidiKeyboardComponent::horizontalKeyboard),
-               startTime(Time::getMillisecondCounterHiRes() * 0.001),
-               _midiNote(69),
-               _noteOn(false)
+               startTime(Time::getMillisecondCounterHiRes() * 0.001)
 {
     addAndMakeVisible(midiInputList);
     midiInputList.setTextWhenNoChoicesAvailable("No MIDI Inputs Enabled");
@@ -40,11 +38,17 @@ Midi::Midi() : lastInputIndex(0),
     midiMessagesBox.setColour (TextEditor::outlineColourId, Colour (0x1c000000));
     midiMessagesBox.setColour (TextEditor::shadowColourId, Colour (0x16000000));
 
+    _voices = nullptr;
+
     setSize (800, 600);
 
-    //keyboardComponent.setExplicitFocusOrder(10);
-    //keyboardComponent.setWantsKeyboardFocus(true);
-    //keyboardComponent.setAlwaysOnTop(true);
+    /*
+    for (int i = keyboardComponent.getRangeStart(); i < keyboardComponent.getRangeEnd(); ++i) {
+        _midiNotesOn.push_back(false);
+    }
+
+    logMessage(String (_midiNotesOn.size()));
+     */
 }
 
 
@@ -64,22 +68,18 @@ void Midi::resized() {
 }
 
 
-int Midi::getMidiNote() const
+/*
+const std::vector<bool>& Midi::getMidiNotes()
 {
-    return _midiNote;
+    return _midiNotesOn;
+}
+*/
+
+int Midi::getNumberOfKeyboardNotes() const
+{
+    return keyboardComponent.getRangeEnd() - keyboardComponent.getRangeStart();
 }
 
-
-void Midi::resetKeyboardState()
-{
-    keyboardState.reset();
-}
-
-
-bool Midi::isNotePlaying() const
-{
-    return _noteOn;
-}
 
 void Midi::setFocus()
 {
@@ -118,8 +118,9 @@ void Midi::handleNoteOn(MidiKeyboardState* , int midiChannel, int midiNoteNumber
 {
     if (!isAddingFromMidiInput) {
         MidiMessage m (MidiMessage::noteOn (midiChannel, midiNoteNumber, velocity));
-        _midiNote = midiNoteNumber;
-        _noteOn = true;
+        //_midiNotesOn[midiNoteNumber] = true;
+        _voices->noteOn(midiNoteNumber, velocity);
+
         m.setTimeStamp (Time::getMillisecondCounterHiRes() * 0.001);
         postMessageToList (m, "On-Screen Keybaord");
     }
@@ -130,7 +131,9 @@ void Midi::handleNoteOff(MidiKeyboardState* , int midiChannel, int midiNoteNumbe
 {
     if (!isAddingFromMidiInput) {
         MidiMessage m (MidiMessage::noteOff (midiChannel, midiNoteNumber));
-        _noteOn = false;
+        //_midiNotesOn[midiNoteNumber] = false;
+        _voices->noteOff(midiNoteNumber, velocity);
+
         m.setTimeStamp (Time::getMillisecondCounterHiRes() * 0.001);
         postMessageToList (m, "On-Screen Keyboard");
     }

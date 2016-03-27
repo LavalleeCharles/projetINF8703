@@ -1,96 +1,146 @@
 #include <cmath>
+#include <typeinfo>
 
 #include "Oscillateur.h"
 
 
-const float f_PI = 3.1415927f;
-const float f_2_PI = (2.f * f_PI);
+template <typename T>
+T Oscillateur<T>::_sampleRate = T(48000.);
+template <typename T>
+int Oscillateur<T>::_waveType = 0;
 
-Oscillateur::Oscillateur() : _waveType(0), _sampleRate(48000.f), _frequency(440.f), _phase(0.f), _f0(440.f)
+
+template <typename T>
+Oscillateur<T>::Oscillateur() : _frequency(T(440.)), _phase(T(0.)), _f0(T(440.))
 {
     setPhaseStep();
+    _t = T(0.);
 
-    _waveTypeTable[sine] = &Oscillateur::sineWave;
-    _waveTypeTable[saw] = &Oscillateur::sawWave;
-    _waveTypeTable[square] = &Oscillateur::squareWave;
-    _waveTypeTable[triangle] = &Oscillateur::triangleWave;
+    _waveTypeTable[sine] = &Oscillateur<T>::sineWave;
+    _waveTypeTable[saw] = &Oscillateur<T>::sawWave;
+    _waveTypeTable[square] = &Oscillateur<T>::squareWave;
+    _waveTypeTable[triangle] = &Oscillateur<T>::triangleWave;
+
+    if (typeid(T) == typeid(float)) {
+        _PI = 3.1415927f;
+    } else {
+        _PI = M_PI;
+    }
+    _2_PI = 2 * _PI;
 }
 
 
-Oscillateur::~Oscillateur()
+template <typename T>
+Oscillateur<T>::~Oscillateur()
 {
 
 }
 
 
-void Oscillateur::setSampleRate(float sampleRate)
+template <typename T>
+void Oscillateur<T>::setSampleRate(T sampleRate)
 {
     _sampleRate = sampleRate;
+    //setPhaseStep();
+}
+
+
+template <typename T>
+void Oscillateur<T>::setFrequency(int note)
+{
+    _frequency = _f0 * std::pow(T(2.), (note - 81) / T(12.));
     setPhaseStep();
 }
 
 
-void Oscillateur::setFrequency(int note)
+template <typename T>
+void Oscillateur<T>::setPhaseStep()
 {
-    _frequency = _f0 * std::pow(2.f, (note - 69) / 12.f);;
-    setPhaseStep();
+    _dt = _frequency / _sampleRate; // pour polyBLEP
+    _phaseStep = _2_PI * _dt;
 }
 
 
-void Oscillateur::setPhaseStep()
-{
-    _phaseStep = 2 * f_PI * _frequency / _sampleRate;
-}
-
-
-void Oscillateur::setWaveType(int waveType)
+template <typename T>
+void Oscillateur<T>::setWaveType(int waveType)
 {
     _waveType = waveType;
 }
 
 
-void Oscillateur::play(float* buffer, int nbFrames)
+template <typename T>
+void Oscillateur<T>::reset()
 {
-    for (int i = 0; i < nbFrames; ++i) {
-        buffer[i] = (this->*_waveTypeTable[_waveType])(_phase);
-        _phase += _phaseStep;
-        if (_phase >= f_2_PI) {
-            _phase -= f_2_PI;
-        }
+    _phase = T(0.);
+}
+
+
+template <typename T>
+T Oscillateur<T>::nextSample()
+{
+    T value = (this->*_waveTypeTable[_waveType])(_phase);
+    _phase += _phaseStep;
+    while (_phase >= _2_PI) {
+        _phase -= _2_PI;
+    }
+    return value;
+}
+
+
+// Tiré de: http://www.kvraudio.com/forum/viewtopic.php?t=375517
+template <typename T>
+T Oscillateur<T>::polyBLEP(T t)
+{
+    // 0 <= t < 1
+    if (t < _dt) {
+        t /= _dt;
+        // 2 * (t - t^2/2 - 0.5)
+        return (t + t) - (t * t) - T(1.);
+    // -1 < t < 0
+    } else if (t > 1. - _dt) {
+        t = (t - T(1.)) / _dt;
+        // 2 * (t^2/2 + t + 0.5)
+        return (t * t) + (t + t) + T(1.);
+    // 0 otherwise
+    } else {
+        return T(0.);
     }
 }
 
 
-float Oscillateur::sineWave(float phase)
+template <typename T>
+T Oscillateur<T>::sineWave(T phase)
 {
-    return sinf(phase);
+    return std::sin(phase);
 }
 
 
-float Oscillateur::sawWave(float phase)
+template <typename T>
+T Oscillateur<T>::sawWave(T phase)
 {
-    return 1.f - (2.f * phase / f_2_PI);
+    return T(1.) - (2 * phase / _2_PI);
 }
 
 
-float Oscillateur::squareWave(float phase)
+template <typename T>
+T Oscillateur<T>::squareWave(T phase)
 {
-    if (phase <= f_PI) {
-        return 1.f;
+    if (phase <= _PI) {
+        return T(1.);
     } else {
-        return -1.f;
+        return T(-1.);
     }
 }
 
-float Oscillateur::triangleWave(float phase)
-{
-    /*
-    if (phase <= f_PI) {
-        return -1.f + (2.f * phase / f_PI);
-    } else {
-        return 1.f - (2.f * phase / f_PI);
-    }*/
-    float tmp = -1.f + (2.f * phase / f_2_PI);
-    return 2.f * (fabsf(tmp) - 0.5f);
 
+template <typename T>
+T Oscillateur<T>::triangleWave(T phase)
+{
+    T tmp = T(-1.) + (2 * phase / _2_PI);
+    return T(2.) * (std::fabs(tmp) - T(0.5));
 }
+
+
+// Explicit template instantiation
+template class Oscillateur<float>;
+template class Oscillateur<double>;
