@@ -54,11 +54,12 @@ public:
         // but be careful - it will be called on the audio thread, not the GUI thread.
 
         // For more details, see the help for AudioProcessor::prepareToPlay()
-        Oscillateur<float>::setSampleRate((float)sampleRate);
+
+        Voice::setSampleRate(sampleRate);
         for (int i = 0; i < _voices.size(); ++i) {
-            _voices[i]->setAttackRate((unsigned long long)(sampleRate * 0.2));
+            _voices[i]->setAttackRate((unsigned long long)(sampleRate * 0.1));
             _voices[i]->setDecayRate((unsigned long long)(sampleRate * 0.3));
-            _voices[i]->setReleaseRate((unsigned long long)(sampleRate * 1.2));
+            _voices[i]->setReleaseRate((unsigned long long)(sampleRate * 0.9));
         }
 
         String message;
@@ -74,7 +75,6 @@ public:
         // For more details, see the help for AudioProcessor::getNextAudioBlock()
 
         //_midiNotesOn = midi.getMidiNotes();
-
         for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel) {
             float *const buffer = bufferToFill.buffer->getWritePointer(channel, bufferToFill.startSample);
 
@@ -145,7 +145,7 @@ private:
     void comboBoxChanged(ComboBox* comboBox) override
     {
         if (comboBox == &waveTypeComboBox) {
-            Oscillateur<float>::setWaveType(comboBox->getSelectedItemIndex());
+            Voice::setWaveType(comboBox->getSelectedItemIndex());
             midi.setFocus();
         }
     }

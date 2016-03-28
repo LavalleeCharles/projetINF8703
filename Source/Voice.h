@@ -3,7 +3,7 @@
 
 #include "Oscillateur.h"
 #include "Envelope.h"
-// TODO : Filter
+#include "Filter.h"
 
 
 class Voice
@@ -29,10 +29,17 @@ public:
     void setDecayRate(unsigned long long rate);
     void setReleaseRate(unsigned long long rate);
 
+    static void setSampleRate(double sampleRate);
+    inline static void setWaveType(int waveType) { Oscillateur::setWaveType(waveType); }
+
+    inline static void setFilterType(int type) { Filter::setFilterType(type); }
+    inline static void setCutoff(double cutoff) { Filter::setCutoff(cutoff); }
+    inline static void setResonance(double resonance) { Filter::setResonance(resonance); }
+
 private:
-    Oscillateur<float> _oscillateur;
+    Oscillateur _oscillateur;
     Envelope _envelope;
-    // Filter _filter
+    Filter _filter;
 
     int _note;
     int _velocity;

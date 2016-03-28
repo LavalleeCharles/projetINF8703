@@ -6,42 +6,42 @@
 
 enum waveTypes : int {sine=0, saw, square, triangle, NB_OF_WAVE_TYPES};
 
-template <typename T>
+
 class Oscillateur
 {
 public:
     Oscillateur();
     ~Oscillateur();
 
-    static void setSampleRate(T sampleRate);
-    static void setWaveType(int waveType);
+    static void setSampleRate(double sampleRate);
+    inline static void setWaveType(int waveType) { _waveType = waveType; }
     void setFrequency(int note);
     void reset();
 
-    T nextSample();
+    double nextSample();
 
 private:
     void setPhaseStep();
-    T polyBLEP(T t); // TODO
+    double polyBLEP(double t); // TODO
 
-    T sineWave(T phase);
-    T sawWave(T phase);
-    T squareWave(T phase);
-    T triangleWave(T phase);
+    double sineWave(double phase);
+    double sawWave(double phase);
+    double squareWave(double phase);
+    double triangleWave(double phase);
 
 private:
     static int _waveType;
-    static T _sampleRate;
-    T _frequency;
-    T _phase;
-    T _phaseStep;
-    T _dt;
-    T _t;
-    T _PI;
-    T _2_PI;
-    const T _f0;
+    static double _sampleRate;
+    double _frequency;
+    double _phase;
+    double _phaseStep;
+    double _dt;
+    double _t;
+    double _PI;
+    double _2_PI;
+    const double _f0;
 
-    T (Oscillateur::*_waveTypeTable[NB_OF_WAVE_TYPES])(T);
+    double (Oscillateur::*_waveTypeTable[NB_OF_WAVE_TYPES])(double);
 };
 
 #endif // OSCILLATEUR_H

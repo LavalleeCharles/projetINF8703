@@ -4,81 +4,67 @@
 #include "Oscillateur.h"
 
 
-template <typename T>
-T Oscillateur<T>::_sampleRate = T(48000.);
-template <typename T>
-int Oscillateur<T>::_waveType = 0;
+
+double Oscillateur::_sampleRate = 48000.0;
+int Oscillateur::_waveType = 0;
 
 
-template <typename T>
-Oscillateur<T>::Oscillateur() : _frequency(T(440.)), _phase(T(0.)), _f0(T(440.))
+Oscillateur::Oscillateur() : _frequency(440.0), _phase(0.0), _f0(440.0)
 {
     setPhaseStep();
-    _t = T(0.);
+    _t = 0.0;
 
-    _waveTypeTable[sine] = &Oscillateur<T>::sineWave;
-    _waveTypeTable[saw] = &Oscillateur<T>::sawWave;
-    _waveTypeTable[square] = &Oscillateur<T>::squareWave;
-    _waveTypeTable[triangle] = &Oscillateur<T>::triangleWave;
+    _waveTypeTable[sine] = &Oscillateur::sineWave;
+    _waveTypeTable[saw] = &Oscillateur::sawWave;
+    _waveTypeTable[square] = &Oscillateur::squareWave;
+    _waveTypeTable[triangle] = &Oscillateur::triangleWave;
 
-    if (typeid(T) == typeid(float)) {
-        _PI = 3.1415927f;
-    } else {
-        _PI = M_PI;
-    }
-    _2_PI = 2 * _PI;
+    _PI = M_PI;
+    _2_PI = M_2_PI;
 }
 
 
-template <typename T>
-Oscillateur<T>::~Oscillateur()
+
+Oscillateur::~Oscillateur()
 {
 
 }
 
 
-template <typename T>
-void Oscillateur<T>::setSampleRate(T sampleRate)
+
+void Oscillateur::setSampleRate(double sampleRate)
 {
     _sampleRate = sampleRate;
     //setPhaseStep();
+    // TODO : updater le _phaseStep pour tout les oscillateurs???
 }
 
 
-template <typename T>
-void Oscillateur<T>::setFrequency(int note)
+
+void Oscillateur::setFrequency(int note)
 {
-    _frequency = _f0 * std::pow(T(2.), (note - 81) / T(12.));
+    _frequency = _f0 * std::pow(2.0, (note - 81) / 12.0);
     setPhaseStep();
 }
 
 
-template <typename T>
-void Oscillateur<T>::setPhaseStep()
+
+void Oscillateur::setPhaseStep()
 {
     _dt = _frequency / _sampleRate; // pour polyBLEP
     _phaseStep = _2_PI * _dt;
 }
 
 
-template <typename T>
-void Oscillateur<T>::setWaveType(int waveType)
+void Oscillateur::reset()
 {
-    _waveType = waveType;
+    _phase = 0.0;
 }
 
 
-template <typename T>
-void Oscillateur<T>::reset()
+double Oscillateur::nextSample()
 {
-    _phase = T(0.);
-}
-
-
-template <typename T>
-T Oscillateur<T>::nextSample()
-{
-    T value = (this->*_waveTypeTable[_waveType])(_phase);
+    double value = (this->*_waveTypeTable[_waveType])(_phase);
     _phase += _phaseStep;
     while (_phase >= _2_PI) {
         _phase -= _2_PI;
@@ -88,59 +74,54 @@ T Oscillateur<T>::nextSample()
 
 
 // Tiré de: http://www.kvraudio.com/forum/viewtopic.php?t=375517
-template <typename T>
-T Oscillateur<T>::polyBLEP(T t)
+
+double Oscillateur::polyBLEP(double t)
 {
     // 0 <= t < 1
     if (t < _dt) {
         t /= _dt;
         // 2 * (t - t^2/2 - 0.5)
-        return (t + t) - (t * t) - T(1.);
+        return (t + t) - (t * t) - 1.0;
     // -1 < t < 0
     } else if (t > 1. - _dt) {
-        t = (t - T(1.)) / _dt;
+        t = (t - 1.0) / _dt;
         // 2 * (t^2/2 + t + 0.5)
-        return (t * t) + (t + t) + T(1.);
+        return (t * t) + (t + t) + 1.0;
     // 0 otherwise
     } else {
-        return T(0.);
+        return 0.0;
     }
 }
 
 
-template <typename T>
-T Oscillateur<T>::sineWave(T phase)
+
+double Oscillateur::sineWave(double phase)
 {
     return std::sin(phase);
 }
 
 
-template <typename T>
-T Oscillateur<T>::sawWave(T phase)
+
+double Oscillateur::sawWave(double phase)
 {
-    return T(1.) - (2 * phase / _2_PI);
+    return 1.0 - (2 * phase / _2_PI);
 }
 
 
-template <typename T>
-T Oscillateur<T>::squareWave(T phase)
+
+double Oscillateur::squareWave(double phase)
 {
     if (phase <= _PI) {
-        return T(1.);
+        return 1.0;
     } else {
-        return T(-1.);
+        return -1.0;
     }
 }
 
 
-template <typename T>
-T Oscillateur<T>::triangleWave(T phase)
+
+double Oscillateur::triangleWave(double phase)
 {
-    T tmp = T(-1.) + (2 * phase / _2_PI);
-    return T(2.) * (std::fabs(tmp) - T(0.5));
+    double tmp = -1.0 + (2 * phase / _2_PI);
+    return 2.0 * (std::fabs(tmp) - 0.5);
 }
-
-
-// Explicit template instantiation
-template class Oscillateur<float>;
-template class Oscillateur<double>;
