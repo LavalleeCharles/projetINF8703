@@ -16,10 +16,9 @@ public:
     ~Midi();
 
     void resized() override;
-    //const std::vector<bool>& getMidiNotes();
     int getNumberOfKeyboardNotes() const;
 
-    inline void setVoicesVector(VoicesVector* v) { _voices = v; } // sketch
+    inline void setVoicesVector(VoicesVector* v) { _voices = v; }
 
     void setFocus();
 
@@ -124,10 +123,6 @@ private:
 
 
     VoicesVector* _voices;
-
-    //int _midiNote;
-    //bool _noteOn;
-    //std::vector<bool> _midiNotesOn;
 };
 
 

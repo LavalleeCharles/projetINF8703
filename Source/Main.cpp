@@ -13,11 +13,11 @@
 Component* createMainContentComponent();
 
 //==============================================================================
-class SimpleSynthesisDemoApplication  : public JUCEApplication
+class projetINF8703_VisualStudioApplication  : public JUCEApplication
 {
 public:
     //==============================================================================
-    SimpleSynthesisDemoApplication() {}
+    projetINF8703_VisualStudioApplication() {}
 
     const String getApplicationName() override       { return ProjectInfo::projectName; }
     const String getApplicationVersion() override    { return ProjectInfo::versionString; }
@@ -98,4 +98,4 @@ private:
 
 //==============================================================================
 // This macro generates the main() routine that launches the app.
-START_JUCE_APPLICATION (SimpleSynthesisDemoApplication)
+START_JUCE_APPLICATION (projetINF8703_VisualStudioApplication)

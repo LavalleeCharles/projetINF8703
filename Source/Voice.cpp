@@ -19,6 +19,7 @@ float Voice::nextSample()
     float sample = 0.f;
     if (_isPlaying) {
         sample = (float) _filter.filterValue((_oscillateur.nextSample() * _envelope.envelopeValue()));
+		//sample = (float)(_oscillateur.nextSample());
     }
     return sample;
 }
@@ -42,7 +43,7 @@ void Voice::reset()
 {
     _oscillateur.reset();
     _envelope.reset();
-    // reset filter?
+    _filter.reset();
 }
 
 

@@ -5,6 +5,12 @@
 #include "VoicesVector.h"
 #include "Midi.h"
 
+#include "FilterGUI.h"
+
+
+// TODO : redesign de la structure du code
+
+
 //==============================================================================
 /*
     This component lives inside our window, and this is where you should put all
@@ -18,7 +24,7 @@ public:
     Synthesizer()
     {
         addAndMakeVisible(waveTypeComboBox);
-        StringArray waveTypesLabel = {"Sine", "Saw", "Square", "Triangle"};
+        StringArray waveTypesLabel = { "Sine", "Saw", "Square", "Triangle" };
         waveTypeComboBox.addItemList(waveTypesLabel, 1);
         waveTypeComboBox.setSelectedId(1, dontSendNotification);
         waveTypeComboBox.addListener(this);
@@ -26,6 +32,8 @@ public:
         addAndMakeVisible(waveTypeLabel);
         waveTypeLabel.setText("Wave Type", dontSendNotification);
         waveTypeLabel.attachToComponent(&waveTypeComboBox, true);
+
+        addAndMakeVisible(_filterGUI);
 
         addAndMakeVisible(midi);
         midi.setVoicesVector(&_voices);
@@ -56,12 +64,12 @@ public:
         // For more details, see the help for AudioProcessor::prepareToPlay()
 
         Voice::setSampleRate(sampleRate);
-        for (int i = 0; i < _voices.size(); ++i) {
+        for (size_t i = 0; i < _voices.size(); ++i) {
             _voices[i]->setAttackRate((unsigned long long)(sampleRate * 0.1));
-            _voices[i]->setDecayRate((unsigned long long)(sampleRate * 0.3));
-            _voices[i]->setReleaseRate((unsigned long long)(sampleRate * 0.9));
+            _voices[i]->setDecayRate((unsigned long long)(sampleRate * 0.5));
+            _voices[i]->setReleaseRate((unsigned long long)(sampleRate * 0.5));
         }
-
+		
         String message;
         message << "samplesPerBlockExpected = " << samplesPerBlockExpected << newLine;
         message << "sampleRate = " << sampleRate << newLine;
@@ -74,23 +82,16 @@ public:
         // Your audio-processing code goes here!
         // For more details, see the help for AudioProcessor::getNextAudioBlock()
 
-        //_midiNotesOn = midi.getMidiNotes();
-        for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel) {
-            float *const buffer = bufferToFill.buffer->getWritePointer(channel, bufferToFill.startSample);
+        //for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel) {
+            float *const buffer0 = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+			float *const buffer1 = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
+            for (int i = 0; i < bufferToFill.numSamples; ++i) {
+				float value = _voices.nextSample();
+				buffer0[i] = value; 
+				buffer1[i] = value;
+            }
 
-            //for (int n = 0; n < _midiNotesOn.size(); ++n) {
-            //    if (_midiNotesOn[n]) {
-            //        _voices.noteOn(n, 0);
-
-                for (int i = 0; i < bufferToFill.numSamples; ++i) {
-                    buffer[i] = _voices.nextSample();
-                }
-            //    } else {
-
-            //  }
-
-            //}
-        }
+        //}
     }
 
     void releaseResources() override
@@ -104,28 +105,34 @@ public:
     }
 
     //=======================================================================
-    void paint (Graphics& g) override
+    void paint (Graphics& /*g*/) override
     {
         // (Our component is opaque, so we must completely fill the background with a solid colour)
         // g.fillAll (Colours::black);
 
+        /*
         if (this->isShowing()) {
             midi.setFocus();
         }
+         */
     }
 
     void resized() override
     {
         // This is called when the MainContentComponent is resized.
-        // If you add any child components, this is where you should
+        // If you add any ch
+        // ild components, this is where you should
         // update their positions.
-        const int comboBoxLeft = 120;
-        waveTypeComboBox.setBounds(comboBoxLeft, 20, 80, 20);
-        midi.setTopLeftPosition(0, 40);
+        waveTypeComboBox.setBounds(120, 20, 80, 20);
+
+        _filterGUI.setTopLeftPosition(0, 40);
+        _filterGUI.resized();
+
+        midi.setTopLeftPosition(0, 80);
         midi.resized();
     }
 
-    void focusGained(FocusChangeType cause) override
+    void focusGained(FocusChangeType /*cause*/) override
     {
         midi.setFocus();
     }
@@ -145,7 +152,7 @@ private:
     void comboBoxChanged(ComboBox* comboBox) override
     {
         if (comboBox == &waveTypeComboBox) {
-            Voice::setWaveType(comboBox->getSelectedItemIndex());
+			Voice::setWaveType(comboBox->getSelectedItemIndex());
             midi.setFocus();
         }
     }
@@ -158,8 +165,9 @@ private:
     ComboBox waveTypeComboBox;
     Label waveTypeLabel;
 
-    Midi midi;
-    //std::vector<bool> _midiNotesOn;
+    Midi midi; // TODO : midi dans le MainComponent?
+
+    FilterGUI _filterGUI;
 };
 
 

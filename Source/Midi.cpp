@@ -10,6 +10,9 @@ Midi::Midi() : lastInputIndex(0),
     const StringArray midiInputs(MidiInput::getDevices());
     midiInputList.addItemList(midiInputs, 1);
     midiInputList.addListener(this);
+    addAndMakeVisible(midiInputListLabel);
+    midiInputListLabel.setText("Midi Device", dontSendNotification);
+    midiInputListLabel.attachToComponent(&midiInputList, true);
 
     // Find the first enabled device
     for (int i = 0; i < midiInputs.size(); ++i) {
@@ -40,15 +43,7 @@ Midi::Midi() : lastInputIndex(0),
 
     _voices = nullptr;
 
-    setSize (800, 600);
-
-    /*
-    for (int i = keyboardComponent.getRangeStart(); i < keyboardComponent.getRangeEnd(); ++i) {
-        _midiNotesOn.push_back(false);
-    }
-
-    logMessage(String (_midiNotesOn.size()));
-     */
+    setSize (getParentWidth(), 600);
 }
 
 
@@ -61,19 +56,12 @@ Midi::~Midi()
 
 
 void Midi::resized() {
-    Rectangle<int> area(getLocalBounds());
-    midiInputList.setBounds(area.removeFromTop(36).removeFromRight(getWidth() - 150).reduced(8));
-    keyboardComponent.setBounds(area.removeFromTop(80).reduced(8));
-    midiMessagesBox.setBounds(area.reduced(8));
+    //Rectangle<int> area(getLocalBounds());
+    midiInputList.setBounds(120, 20, 200, 20);
+    keyboardComponent.setBounds(10, 60, (getWidth() - 990), 60);
+    midiMessagesBox.setBounds(10, 120, (getWidth() - 990), 300);
 }
 
-
-/*
-const std::vector<bool>& Midi::getMidiNotes()
-{
-    return _midiNotesOn;
-}
-*/
 
 int Midi::getNumberOfKeyboardNotes() const
 {

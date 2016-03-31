@@ -1,14 +1,16 @@
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include "Filter.h"
 
 
 
-double Filter::_sampleRate = 48000.0;
+double Filter::_sampleRate = 44100.0;
 double Filter::_cutoff = 1000.0;
 double Filter::_resonance = 0.1;
 double Filter::_b[3] = { 0.5, 0.0, 0.0 };
 double Filter::_a[2] = { 0.0, 0.0 };
 int Filter::_filterType = lowPass;
+
 
 Filter::Filter()
 {
@@ -25,6 +27,15 @@ Filter::~Filter()
 }
 
 
+void Filter::reset()
+{
+    for (int i = 0; i < 2; ++i) {
+        _prevIn[i] = 0.0;
+        _prevOut[i] = 0.0;
+    }
+}
+
+
 void Filter::setSampleRate(double sampleRate)
 {
     _sampleRate = sampleRate;
@@ -34,6 +45,9 @@ void Filter::setSampleRate(double sampleRate)
 
 void Filter::setCutoff(double cutoff)
 {
+    if (_cutoff > _sampleRate / 2.0) {
+        return;
+    }
     _cutoff = cutoff;
     updateCoef();
 }
@@ -41,7 +55,17 @@ void Filter::setCutoff(double cutoff)
 
 void Filter::setResonance(double resonance)
 {
+    if (resonance >= 1.0) {
+        return;
+    }
     _resonance = resonance;
+    updateCoef();
+}
+
+
+void Filter::setFilterType(int type)
+{
+    _filterType = type;
     updateCoef();
 }
 

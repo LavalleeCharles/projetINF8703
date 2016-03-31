@@ -16,8 +16,9 @@ VoicesVector::~VoicesVector()
 
 void VoicesVector::setNumberOfVoices(std::size_t nbOfVoices)
 {
+	// TODO : ...
     _size = nbOfVoices;
-    for (int i = 0; i < _size; ++i) {
+    for (std::size_t i = 0; i < _size; ++i) {
         _voices.push_back(new Voice);
     }
 }
@@ -31,7 +32,7 @@ std::size_t VoicesVector::size() const
 
 void VoicesVector::noteOn(int note, float velocity)
 {
-    Voice* newVoice = getNextVoice();
+    Voice* newVoice = getFreeVoice();
     if (newVoice != nullptr) {
         newVoice->reset();
         newVoice->setNoteToPlay(note);
@@ -43,7 +44,7 @@ void VoicesVector::noteOn(int note, float velocity)
 
 void VoicesVector::noteOff(int note, float velocity)
 {
-    for (int i = 0; i < _size; ++i) {
+    for (std::size_t i = 0; i < _size; ++i) {
         if (_voices[i]->isPlaying() && note == _voices[i]->getNote()) {
             _voices[i]->releaseNote();
         }
@@ -56,9 +57,9 @@ void VoicesVector::noteOff(int note, float velocity)
 }
 
 
-Voice* VoicesVector::getNextVoice()
+Voice* VoicesVector::getFreeVoice()
 {
-    for (int i = 0; i < _size; ++i) {
+    for (std::size_t i = 0; i < _size; ++i) {
         if (!_voices[i]->isPlaying()) {
             return _voices[i];
         }
@@ -75,7 +76,7 @@ Voice* VoicesVector::getNextVoice()
 float VoicesVector::nextSample()
 {
     float sample = 0.f;
-    for (int i = 0; i < _size; ++i) {
+    for (std::size_t i = 0; i < _size; ++i) {
         sample += _voices[i]->nextSample();
     }
     return sample;

@@ -14,16 +14,17 @@ public:
     double filterValue(double value);
 
     static void setSampleRate(double sampleRate);
-    inline static void setFilterType(int type) { _filterType = type; }
+
+    static void setFilterType(int type);
     static void setCutoff(double cutoff);
     static void setResonance(double resonance);
 
+    void reset();
 
 private:
     static void updateCoef();
 
 private:
-
     static int _filterType;
     static double _sampleRate;
     static double _cutoff;

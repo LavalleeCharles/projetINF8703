@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <typeinfo>
 
@@ -5,7 +6,7 @@
 
 
 
-double Oscillateur::_sampleRate = 48000.0;
+double Oscillateur::_sampleRate = 44100.0;
 int Oscillateur::_waveType = 0;
 
 
@@ -24,35 +25,29 @@ Oscillateur::Oscillateur() : _frequency(440.0), _phase(0.0), _f0(440.0)
 }
 
 
-
 Oscillateur::~Oscillateur()
 {
 
 }
 
 
-
 void Oscillateur::setSampleRate(double sampleRate)
 {
     _sampleRate = sampleRate;
-    //setPhaseStep();
-    // TODO : updater le _phaseStep pour tout les oscillateurs???
 }
-
 
 
 void Oscillateur::setFrequency(int note)
 {
-    _frequency = _f0 * std::pow(2.0, (note - 81) / 12.0);
+    _frequency = _f0 * std::pow(2.0, (note - 81.0) / 12.0);
     setPhaseStep();
 }
-
 
 
 void Oscillateur::setPhaseStep()
 {
     _dt = _frequency / _sampleRate; // pour polyBLEP
-    _phaseStep = _2_PI * _dt;
+	_phaseStep = _frequency * _2_PI / _sampleRate;
 }
 
 
@@ -66,7 +61,7 @@ double Oscillateur::nextSample()
 {
     double value = (this->*_waveTypeTable[_waveType])(_phase);
     _phase += _phaseStep;
-    while (_phase >= _2_PI) {
+    if (_phase >= _2_PI) {
         _phase -= _2_PI;
     }
     return value;
@@ -74,7 +69,6 @@ double Oscillateur::nextSample()
 
 
 // Tiré de: http://www.kvraudio.com/forum/viewtopic.php?t=375517
-
 double Oscillateur::polyBLEP(double t)
 {
     // 0 <= t < 1
@@ -94,12 +88,10 @@ double Oscillateur::polyBLEP(double t)
 }
 
 
-
 double Oscillateur::sineWave(double phase)
 {
     return std::sin(phase);
 }
-
 
 
 double Oscillateur::sawWave(double phase)
@@ -108,16 +100,15 @@ double Oscillateur::sawWave(double phase)
 }
 
 
-
 double Oscillateur::squareWave(double phase)
 {
-    if (phase <= _PI) {
-        return 1.0;
-    } else {
-        return -1.0;
-    }
+	if (phase <= _PI) {
+		return 1.0;
+	}
+	else {
+		return -1.0;
+	}
 }
-
 
 
 double Oscillateur::triangleWave(double phase)

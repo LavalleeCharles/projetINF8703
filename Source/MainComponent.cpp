@@ -33,7 +33,7 @@ public:
     }
 
     //=======================================================================
-    void paint (Graphics& g) override
+    void paint (Graphics& /*g*/) override
     {
         // (Our component is opaque, so we must completely fill the background with a solid colour)
         // g.fillAll (Colours::black);
