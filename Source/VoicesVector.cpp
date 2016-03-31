@@ -83,7 +83,30 @@ float VoicesVector::nextSample()
 }
 
 
-
-
+void VoicesVector::updateEnvelope(double value, Envelope::envelopeParamIndex paramId)
+{
+    // TODO : tableau de fonction
+    for (std::size_t i = 0; i < _size; ++i) {
+        switch (paramId) {
+            case Envelope::envelopeParamIndex::attackLevel:
+                _voices[i]->setAttackLevel(value);
+                break;
+            case Envelope::envelopeParamIndex::decayLevel:
+                _voices[i]->setDecayLevel(value);
+                break;
+            case Envelope::envelopeParamIndex::attackRate:
+                _voices[i]->setAttackRate(value);
+                break;
+            case Envelope::envelopeParamIndex::decayRate:
+                _voices[i]->setDecayRate(value);
+                break;
+            case Envelope::envelopeParamIndex::releaseRate:
+                _voices[i]->setReleaseRate(value);
+                break;
+            default:
+                break;
+        }
+    }
+}
 
 

@@ -31,9 +31,9 @@ public:
     // Envelope parameters
     inline void setAttackLevel(double level) { _envelope.setAttackLevel(level); }
     inline void setDecayLevel(double level) { _envelope.setDecayLevel(level); }
-    void setAttackRate(unsigned long long rate);
-    void setDecayRate(unsigned long long rate);
-    void setReleaseRate(unsigned long long rate);
+    void setAttackRate(double rate);
+    void setDecayRate(double rate);
+    void setReleaseRate(double rate);
 
     // Filter parameters
     inline static void setFilterType(int type) { Filter::setFilterType(type); }

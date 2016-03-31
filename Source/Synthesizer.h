@@ -5,10 +5,7 @@
 #include "VoicesVector.h"
 #include "Midi.h"
 
-#include "FilterGUI.h"
-
-
-// TODO : redesign de la structure du code
+// TODO : redesign de la structure du code??
 
 
 //==============================================================================
@@ -16,25 +13,12 @@
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class Synthesizer   : public AudioAppComponent,
-                      private ComboBox::Listener
+class Synthesizer   : public AudioAppComponent
 {
 public:
     //==============================================================================
     Synthesizer()
     {
-        addAndMakeVisible(waveTypeComboBox);
-        StringArray waveTypesLabel = { "Sine", "Saw", "Square", "Triangle" };
-        waveTypeComboBox.addItemList(waveTypesLabel, 1);
-        waveTypeComboBox.setSelectedId(1, dontSendNotification);
-        waveTypeComboBox.addListener(this);
-
-        addAndMakeVisible(waveTypeLabel);
-        waveTypeLabel.setText("Wave Type", dontSendNotification);
-        waveTypeLabel.attachToComponent(&waveTypeComboBox, true);
-
-        addAndMakeVisible(_filterGUI);
-
         addAndMakeVisible(midi);
         midi.setVoicesVector(&_voices);
 
@@ -64,11 +48,9 @@ public:
         // For more details, see the help for AudioProcessor::prepareToPlay()
 
         Voice::setSampleRate(sampleRate);
-        for (size_t i = 0; i < _voices.size(); ++i) {
-            _voices[i]->setAttackRate((unsigned long long)(sampleRate * 0.1));
-            _voices[i]->setDecayRate((unsigned long long)(sampleRate * 0.5));
-            _voices[i]->setReleaseRate((unsigned long long)(sampleRate * 0.5));
-        }
+        _voices.updateEnvelope(0.1, Envelope::attackRate);
+        _voices.updateEnvelope(0.3, Envelope::decayRate);
+        _voices.updateEnvelope(0.5, Envelope::releaseRate);
 		
         String message;
         message << "samplesPerBlockExpected = " << samplesPerBlockExpected << newLine;
@@ -123,12 +105,7 @@ public:
         // If you add any ch
         // ild components, this is where you should
         // update their positions.
-        waveTypeComboBox.setBounds(120, 20, 80, 20);
 
-        _filterGUI.setTopLeftPosition(0, 40);
-        _filterGUI.resized();
-
-        midi.setTopLeftPosition(0, 80);
         midi.resized();
     }
 
@@ -148,13 +125,8 @@ public:
     }
 
 
-private:
-    void comboBoxChanged(ComboBox* comboBox) override
-    {
-        if (comboBox == &waveTypeComboBox) {
-			Voice::setWaveType(comboBox->getSelectedItemIndex());
-            midi.setFocus();
-        }
+    void updateEnvelope(double value, Envelope::envelopeParamIndex paramId) {
+        _voices.updateEnvelope(value, paramId);
     }
 
 
@@ -162,12 +134,7 @@ private:
     //==============================================================================
     VoicesVector _voices;
 
-    ComboBox waveTypeComboBox;
-    Label waveTypeLabel;
-
     Midi midi; // TODO : midi dans le MainComponent?
-
-    FilterGUI _filterGUI;
 };
 
 

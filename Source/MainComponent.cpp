@@ -11,6 +11,10 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Synthesizer.h"
+#include "OscillatorGUI.h"
+#include "FilterGUI.h"
+#include "EnvelopeGUI.h"
+
 
 //==============================================================================
 /*
@@ -23,7 +27,14 @@ public:
     //==============================================================================
     MainContentComponent()
     {
-        addAndMakeVisible(synth);
+        addAndMakeVisible(_synth);
+
+        addAndMakeVisible(_oscillatorGUI);
+
+        addAndMakeVisible(_filterGUI);
+
+        addAndMakeVisible(_envelopeGUI);
+        _envelopeGUI.setSynth(&_synth);
 
         setSize (1000, 600);
     }
@@ -44,14 +55,29 @@ public:
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.
+        _oscillatorGUI.setTopLeftPosition(0, 0);
+        _oscillatorGUI.resized();
 
+        _filterGUI.setTopLeftPosition(0, 80);
+        _filterGUI.resized();
+
+        _envelopeGUI.setTopLeftPosition(0, 160);
+        _envelopeGUI.resized();
+
+        _synth.setTopLeftPosition(0, 260);
+        _synth.resized();
     }
+
 
 private:
     //==============================================================================
 
     // Your private member variables go here...
-    Synthesizer synth;
+    Synthesizer _synth;
+
+    OscillatorGUI _oscillatorGUI;
+    FilterGUI _filterGUI;
+    EnvelopeGUI _envelopeGUI;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
 };

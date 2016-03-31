@@ -13,6 +13,9 @@ class FilterGUI : public Component,
 public:
     FilterGUI()
     {
+        addAndMakeVisible(_filterLabel);
+        _filterLabel.setText("FILTER", dontSendNotification);
+
         // Filter Type
         addAndMakeVisible(_filterTypeComboBox);
         StringArray filterTypesLabel = { "Low Pass", "High Pass", "Band Pass" };
@@ -45,7 +48,7 @@ public:
         _filterResLabel.setText("Resonance:", dontSendNotification);
         _filterResLabel.attachToComponent(&_filterResValue, true);
 
-        setSize(600, 60);
+        setSize(800, 80);
     }
 
     ~FilterGUI()
@@ -53,10 +56,11 @@ public:
 
     }
 
-    void paint (Graphics& /*g*/) override
+    void paint (Graphics& g) override
     {
         // (Our component is opaque, so we must completely fill the background with a solid colour)
         // g.fillAll (Colours::black);
+        g.drawRoundedRectangle(10, 10, 610, 70, 10, 1);
     }
 
     void resized() override
@@ -64,9 +68,10 @@ public:
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.
-        _filterTypeComboBox.setBounds(120, 20, 80, 20);
-        _filterCutoffValue.setBounds(320, 20, 80, 20);
-        _filterResValue.setBounds(520, 20, 80, 20);
+        _filterLabel.setBounds(10, 20, 80, 20);
+        _filterTypeComboBox.setBounds(120, 40, 80, 20);
+        _filterCutoffValue.setBounds(320, 40, 80, 20);
+        _filterResValue.setBounds(520, 40, 80, 20);
     }
 
 
@@ -82,18 +87,18 @@ private:
     void labelTextChanged(Label* label) override
     {
         if (label == &_filterCutoffValue) {
-            double f = label->getText().getDoubleValue();
-            Voice::setFilterCutoff(f);
+            Voice::setFilterCutoff(label->getText().getDoubleValue());
             //midi.setFocus();
         } else if (label == &_filterResValue) {
-            double r = label->getText().getDoubleValue();
-            Voice::setFilterResonance(r);
+            Voice::setFilterResonance( label->getText().getDoubleValue());
             //midi.setFocus();
         }
     }
 
 
 private:
+    Label _filterLabel;
+
     ComboBox _filterTypeComboBox;
     Label _filterTypeLabel;
 

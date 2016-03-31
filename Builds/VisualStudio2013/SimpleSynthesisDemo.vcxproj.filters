@@ -319,9 +319,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\FilterGUI.cpp">
-      <Filter>SimpleSynthesisDemo\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Filter.cpp">
       <Filter>SimpleSynthesisDemo\Source</Filter>
     </ClCompile>
@@ -1641,6 +1638,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\OscillatorGUI.h">
+      <Filter>SimpleSynthesisDemo\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\EnvelopeGUI.h">
+      <Filter>SimpleSynthesisDemo\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\FilterGUI.h">
       <Filter>SimpleSynthesisDemo\Source</Filter>
     </ClInclude>

@@ -49,7 +49,6 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
-  $(OBJDIR)/FilterGUI_3e208284.o \
   $(OBJDIR)/Filter_cccb6f01.o \
   $(OBJDIR)/VoicesVector_c2efacad.o \
   $(OBJDIR)/Envelope_2c60e259.o \
@@ -90,11 +89,6 @@ clean:
 strip:
 	@echo Stripping SimpleSynthesisDemo
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
-
-$(OBJDIR)/FilterGUI_3e208284.o: ../../Source/FilterGUI.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling FilterGUI.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Filter_cccb6f01.o: ../../Source/Filter.cpp
 	-@mkdir -p $(OBJDIR)

@@ -13,7 +13,7 @@ public:
     VoicesVector();
     ~VoicesVector();
 
-    Voice* operator[](std::size_t i) { return _voices[i]; } // TODO : remove this for warnings
+    Voice* operator[](std::size_t i) { return _voices[i]; } // TODO : remove this for warnings?
 
     void setNumberOfVoices(std::size_t nbOfVoices);
     std::size_t size() const;
@@ -22,6 +22,8 @@ public:
     void noteOff(int note, float velocity);
 
     float nextSample();
+
+	void updateEnvelope(double value, Envelope::envelopeParamIndex paramId);
 
 private:
 	Voice* getFreeVoice();

@@ -96,7 +96,7 @@ double Oscillateur::sineWave(double phase)
 
 double Oscillateur::sawWave(double phase)
 {
-    return 1.0 - (2 * phase / _2_PI);
+    return 1.0 - (2.0 * phase / _2_PI);
 }
 
 

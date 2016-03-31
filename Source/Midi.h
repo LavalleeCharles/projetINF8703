@@ -104,7 +104,7 @@ private:
         const String noteNumber (message.getNoteNumber());
         const String frequency (440.0 * std::pow(2.0, double(message.getNoteNumber() - 81) / 12.0));
 
-        const String midiMessageString (timecode + "  -  " + description + " (" + source + ")" + " Note: " + noteNumber + " f: " + frequency + " Hz"); // [7]
+        const String midiMessageString (timecode + "  -  " + description + " (" + source + ")" + " Note: " + noteNumber + " f: " + frequency + " Hz");
         logMessage (midiMessageString);
     }
 

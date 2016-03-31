@@ -2,6 +2,8 @@
 #include "Envelope.h"
 
 
+double Envelope::_sampleRate = 44100.0;
+
 
 Envelope::Envelope()
         : _minLevel(0.0001), _attackLevel(1.0), _decayLevel(0.8), _finishedRelease(false)
@@ -48,23 +50,23 @@ void Envelope::setDecayLevel(double level)
 }
 
 
-void Envelope::setAttackRate(unsigned long long rate)
+void Envelope::setAttackRate(double rate)
 {
-    _attackLength = rate;
+    _attackLength = (unsigned long long)(rate * _sampleRate);
     _attackMultiplier = multiplier(_minLevel, _attackLevel, _attackLength);
 }
 
 
-void Envelope::setDecayRate(unsigned long long rate)
+void Envelope::setDecayRate(double rate)
 {
-    _decayLength = rate;
+    _decayLength = (unsigned long long)(rate * _sampleRate);
     _decayMultiplier = multiplier(1.0, _decayLevel, _decayLength);
 }
 
 
-void Envelope::setReleaseRate(unsigned long long rate)
+void Envelope::setReleaseRate(double rate)
 {
-    _releaseLength = rate;
+    _releaseLength = (unsigned long long)(rate * _sampleRate);
     _releaseMultiplier = multiplier(_decayLevel, _minLevel, _releaseLength);
 }
 
@@ -139,5 +141,7 @@ double Envelope::envelopeValue()
 
 
 
-
-
+void Envelope::setSampleRate(double sampleRate)
+{
+    _sampleRate = sampleRate;
+}

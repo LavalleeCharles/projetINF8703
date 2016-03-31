@@ -5,6 +5,7 @@
 class Envelope
 {
 public:
+    enum envelopeParamIndex { attackLevel=0, decayLevel, attackRate, decayRate, releaseRate, NB_OF_ENV_PARAM_ID };
     enum envelopeState {idle=0, attack, decay, sustain, release, NB_OF_ENV_STATE};
 
     Envelope();
@@ -20,11 +21,13 @@ public:
     void setAttackLevel(double level);
     void setDecayLevel(double level);
 
-    void setAttackRate(unsigned long long rate);
-    void setDecayRate(unsigned long long rate);
-    void setReleaseRate(unsigned long long rate);
+    void setAttackRate(double rate);
+    void setDecayRate(double rate);
+    void setReleaseRate(double rate);
 
     inline bool isCycleFinished() { return _finishedRelease; }
+
+    static void setSampleRate(double sampleRate);
 
 private:
     double multiplier(double startLevel, double endLevel, unsigned long long lengthInSamples);
@@ -44,6 +47,8 @@ private:
     unsigned long long _attackLength;
     unsigned long long _decayLength;
     unsigned long long _releaseLength;
+
+    static double _sampleRate;
 
     bool _finishedRelease;
 };
