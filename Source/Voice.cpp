@@ -18,7 +18,6 @@ float Voice::nextSample()
 {
     float sample = 0.f;
     if (_isPlaying) {
-        // TODO : no filter
         sample = (float) _filter.filterValue((_oscillateur.nextSample() * _envelope.envelopeValue()));
     }
     return sample;
@@ -64,6 +63,12 @@ void Voice::setSampleRate(double sampleRate)
 }
 
 
+void Voice::setWaveType(int waveType)
+{
+    Oscillateur::setWaveType(waveType);
+}
+
+
 void Voice::setAttackRate(double rate)
 {
     _envelope.setAttackRate(rate);
@@ -79,4 +84,11 @@ void Voice::setDecayRate(double rate)
 void Voice::setReleaseRate(double rate)
 {
     _envelope.setReleaseRate(rate);
+}
+
+
+void Voice::freeVoice()
+{
+    _isPlaying = false;
+    reset();
 }

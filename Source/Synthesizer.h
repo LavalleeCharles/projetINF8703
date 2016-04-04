@@ -6,13 +6,6 @@
 #include "Midi.h"
 
 // TODO : redesign de la structure du code??
-
-
-//==============================================================================
-/*
-    This component lives inside our window, and this is where you should put all
-    your controls and content.
-*/
 class Synthesizer   : public AudioAppComponent
 {
 public:
@@ -48,9 +41,13 @@ public:
         // For more details, see the help for AudioProcessor::prepareToPlay()
 
         Voice::setSampleRate(sampleRate);
+        Voice::setWaveType(Oscillateur::sine);
         _voices.updateEnvelope(0.1, Envelope::attackRate);
         _voices.updateEnvelope(0.3, Envelope::decayRate);
         _voices.updateEnvelope(0.5, Envelope::releaseRate);
+        _voices.updateEnvelope(1.0, Envelope::attackLevel);
+        _voices.updateEnvelope(0.8, Envelope::decayLevel);
+        // TODO : setter le filtre
 		
         String message;
         message << "samplesPerBlockExpected = " << samplesPerBlockExpected << newLine;
@@ -63,17 +60,27 @@ public:
     {
         // Your audio-processing code goes here!
         // For more details, see the help for AudioProcessor::getNextAudioBlock()
+        /*
+        float *const buffer0 = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+        float *const buffer1 = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
+        for (int i = 0; i < bufferToFill.numSamples; ++i) {
+            float value = _phase <= M_PI ? 1.0: -1.0;
+            buffer0[i] = value * 0.5f;
+            buffer1[i] = value * 0.5f;
 
-        //for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel) {
-            float *const buffer0 = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
-			float *const buffer1 = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
-            for (int i = 0; i < bufferToFill.numSamples; ++i) {
-				float value = _voices.nextSample();
-				buffer0[i] = value; 
-				buffer1[i] = value;
+            _phase += _phaseStep;
+            if (_phase >= M_2_PI) {
+
             }
+        }*/
 
-        //}
+        float *const buffer0 = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+        float *const buffer1 = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
+        for (int i = 0; i < bufferToFill.numSamples; ++i) {
+            float value = _voices.nextSample();
+            buffer0[i] = value * 0.5f;
+            buffer1[i] = value * 0.5f;
+        }
     }
 
     void releaseResources() override

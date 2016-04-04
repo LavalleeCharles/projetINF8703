@@ -18,7 +18,7 @@ public:
     void setNoteToPlay(int note);
     void releaseNote();
     bool isPlaying();
-    inline void freeVoice() { _isPlaying = false; }
+    void freeVoice();
     inline bool isCycleFinished() { return _envelope.isCycleFinished(); }
     inline int getNote() const { return _note; }
 
@@ -26,7 +26,7 @@ public:
     static void setSampleRate(double sampleRate);
 
     // Oscillator parameters
-    inline static void setWaveType(int waveType) { Oscillateur::setWaveType(waveType); }
+    static void setWaveType(int waveType);
 
     // Envelope parameters
     inline void setAttackLevel(double level) { _envelope.setAttackLevel(level); }

@@ -26,6 +26,13 @@ void Envelope::reset()
 {
     _state = idle;
     _envValue = _minLevel;
+    _finishedRelease = false;
+}
+
+
+void Envelope::setSampleRate(double sampleRate)
+{
+    _sampleRate = sampleRate;
 }
 
 
@@ -137,11 +144,4 @@ double Envelope::envelopeValue()
         }
     }
     return _envValue;
-}
-
-
-
-void Envelope::setSampleRate(double sampleRate)
-{
-    _sampleRate = sampleRate;
 }

@@ -2,7 +2,7 @@
 #define FILTER_H
 
 
-enum filterTypes : int { lowPass = 0, highPass, bandPass, NB_OF_FILTER_TYPE };
+enum filterTypes : int { lowPass = 0, highPass, bandPass, noFilter, NB_OF_FILTER_TYPE };
 
 // Filtre d'ordre 2
 class Filter

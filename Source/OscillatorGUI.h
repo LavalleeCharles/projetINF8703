@@ -3,6 +3,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Voice.h"
+#include "../JuceLibraryCode/modules/juce_gui_basics/windows/juce_AlertWindow.h"
 
 
 class OscillatorGUI : public Component,
@@ -55,6 +56,7 @@ private:
     {
         if (comboBox == &_filterWaveTypeComboBox) {
             Voice::setWaveType(comboBox->getSelectedItemIndex());
+            //AlertWindow::showMessageBox(AlertWindow::InfoIcon, "test", String(comboBox->getSelectedItemIndex()));
             //midi.setFocus();
         }
     }

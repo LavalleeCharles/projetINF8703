@@ -18,9 +18,9 @@ public:
 
         // Filter Type
         addAndMakeVisible(_filterTypeComboBox);
-        StringArray filterTypesLabel = { "Low Pass", "High Pass", "Band Pass" };
+        StringArray filterTypesLabel = { "Low Pass", "High Pass", "Band Pass", "No Filter" };
         _filterTypeComboBox.addItemList(filterTypesLabel , 1);
-        _filterTypeComboBox.setSelectedId(1, dontSendNotification);
+        _filterTypeComboBox.setSelectedId(4, dontSendNotification);
         _filterTypeComboBox.addListener(this);
         addAndMakeVisible(_filterTypeLabel);
         _filterTypeLabel.setText("Filter Type", dontSendNotification);
@@ -80,6 +80,7 @@ private:
     {
         if (comboBox == &_filterTypeComboBox) {
             Voice::setFilterType(comboBox->getSelectedItemIndex());
+            //std::cout << comboBox->getSelectedItemIndex() << std::endl;
             //midi.setFocus();
         }
     }

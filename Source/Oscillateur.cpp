@@ -21,7 +21,7 @@ Oscillateur::Oscillateur() : _frequency(440.0), _phase(0.0), _f0(440.0)
     _waveTypeTable[triangle] = &Oscillateur::triangleWave;
 
     _PI = M_PI;
-    _2_PI = M_2_PI;
+    _2_PI = M_PI * 2.0;
 }
 
 
@@ -34,6 +34,12 @@ Oscillateur::~Oscillateur()
 void Oscillateur::setSampleRate(double sampleRate)
 {
     _sampleRate = sampleRate;
+}
+
+
+void Oscillateur::setWaveType(int waveType)
+{
+    _waveType = waveType;
 }
 
 
@@ -102,12 +108,7 @@ double Oscillateur::sawWave(double phase)
 
 double Oscillateur::squareWave(double phase)
 {
-	if (phase <= _PI) {
-		return 1.0;
-	}
-	else {
-		return -1.0;
-	}
+    return phase <= _PI ? 1.0: -1.0;
 }
 
 

@@ -7,9 +7,9 @@
 double Filter::_sampleRate = 44100.0;
 double Filter::_cutoff = 1000.0;
 double Filter::_resonance = 0.1;
-double Filter::_b[3] = { 0.5, 0.0, 0.0 };
+double Filter::_b[3] = { 1.0, 0.0, 0.0 };
 double Filter::_a[2] = { 0.0, 0.0 };
-int Filter::_filterType = lowPass;
+int Filter::_filterType = noFilter;
 
 
 Filter::Filter()
@@ -17,7 +17,12 @@ Filter::Filter()
     for (int i = 0; i < 2; ++i) {
         _prevIn[i] = 0.0;
         _prevOut[i] = 0.0;
+        _a[i] = 0.0;
     }
+
+    _b[0] = 1.0;
+    _b[1] = 0.0;
+    _b[2] = 0.0;
 }
 
 
@@ -32,7 +37,12 @@ void Filter::reset()
     for (int i = 0; i < 2; ++i) {
         _prevIn[i] = 0.0;
         _prevOut[i] = 0.0;
+        _a[i] = 0.0;
     }
+
+    _b[0] = 1.0;
+    _b[1] = 0.0;
+    _b[2] = 0.0;
 }
 
 
@@ -66,19 +76,24 @@ void Filter::setResonance(double resonance)
 void Filter::setFilterType(int type)
 {
     _filterType = type;
-    updateCoef();
+    if (_filterType != noFilter) {
+        updateCoef();
+    }
 }
 
 
 double Filter::filterValue(double value)
 {
-    double out = (_b[0] * value + _b[1] * _prevIn[0] + _b[2] * _prevIn[1]) - (_a[0] * _prevOut[0] + _a[1] * _prevOut[1]);
-
-    _prevOut[1] = _prevOut[0];
-    _prevOut[0] = out;
-    _prevIn[1] = _prevIn[0];
-    _prevIn[0] = value;
-
+    double out = 0.0;
+    if (_filterType == noFilter) {
+        out = value;
+    } else {
+        out = (_b[0] * value + _b[1] * _prevIn[0] + _b[2] * _prevIn[1]) - (_a[0] * _prevOut[0] + _a[1] * _prevOut[1]);
+        _prevIn[1] = _prevIn[0];
+        _prevIn[0] = value;
+        _prevOut[1] = _prevOut[0];
+        _prevOut[0] = out;
+    }
     return out;
 }
 
@@ -113,6 +128,6 @@ void Filter::updateCoef()
             break;
     }
 
-    _a[0] = 2.0 * n * (squareW - 1);
+    _a[0] = 2.0 * n * (squareW - 1.0);
     _a[1] = n * (squareW - (w / _resonance) + 1.0);
 }

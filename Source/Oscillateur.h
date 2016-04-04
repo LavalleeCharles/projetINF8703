@@ -3,18 +3,16 @@
 
 #include <vector>
 
-
-enum waveTypes : int {sine=0, saw, square, triangle, NB_OF_WAVE_TYPES};
-
-
 class Oscillateur
 {
 public:
+    enum waveTypes : int {sine=0, saw, square, triangle, NB_OF_WAVE_TYPES};
+
     Oscillateur();
     ~Oscillateur();
 
     static void setSampleRate(double sampleRate);
-    inline static void setWaveType(int waveType) { _waveType = waveType; }
+    static void setWaveType(int waveType);
     void setFrequency(int note);
     void reset();
 

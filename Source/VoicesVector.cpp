@@ -85,7 +85,7 @@ float VoicesVector::nextSample()
 
 void VoicesVector::updateEnvelope(double value, Envelope::envelopeParamIndex paramId)
 {
-    // TODO : tableau de fonction
+    // TODO : tableau de fonction?
     for (std::size_t i = 0; i < _size; ++i) {
         switch (paramId) {
             case Envelope::envelopeParamIndex::attackLevel:
