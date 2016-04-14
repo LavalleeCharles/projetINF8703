@@ -18,6 +18,7 @@ public:
 
     void noteOn(int note, float velocity);
     void noteOff(int note, float velocity);
+	void pitchWheelOn(double pitchWheelValue);
 
     float nextSample();
 

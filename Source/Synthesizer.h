@@ -6,18 +6,30 @@
 #include "Midi.h"
 
 // TODO : redesign de la structure du code??
-class Synthesizer   : public AudioAppComponent
+class Synthesizer   : public AudioAppComponent,
+                      private Slider::Listener
 {
 public:
     //==============================================================================
     Synthesizer()
     {
-        addAndMakeVisible(midi);
-        midi.setVoicesVector(&_voices);
+        addAndMakeVisible(_midi);
+        _midi.setVoicesVector(&_voices);
+
+        addAndMakeVisible(_gainSlider);
+        _gainSlider.setRange(0, 1);
+        _gainSlider.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _gainSlider.getTextBoxHeight());
+        _gainSlider.setValue(0.4);
+        _gainSlider.addListener(this);
+        addAndMakeVisible(_gainSliderLabel);
+        _gainSliderLabel.setText("Volume", dontSendNotification);
+        _gainSliderLabel.attachToComponent(&_gainSlider, true);
 
         _voices.setNumberOfVoices(64);
 
-        setSize (1000, 600);
+        _width = 1000;
+        _height = 600;
+        setSize (_width, _height);
 
         // specify the number of input and output channels that we want to open
         setAudioChannels (0, 2);
@@ -71,8 +83,8 @@ public:
         float *const buffer1 = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
         for (int i = 0; i < bufferToFill.numSamples; ++i) {
             float value = _voices.nextSample();
-            buffer0[i] = value * 0.25;
-            buffer1[i] = value * 0.25;
+            buffer0[i] = value * _gain;
+            buffer1[i] = value * _gain;
         }
     }
 
@@ -97,6 +109,7 @@ public:
             midi.setFocus();
         }
          */
+        //g.drawRoundedRectangle(10, 10, _width - 190, _height - 10, 10, 1);
     }
 
     void resized() override
@@ -106,7 +119,10 @@ public:
         // ild components, this is where you should
         // update their positions.
 
-        midi.resized();
+        _gainSlider.setBounds(120, 20, 200, 20);
+
+        _midi.setTopLeftPosition(0, 40);
+        _midi.resized();
     }
 
     void focusGained(FocusChangeType /*cause*/) override
@@ -145,11 +161,27 @@ public:
         Voice::setFilterResonance(dFilRes);
     }
 
+
+    void sliderValueChanged(Slider* slider) override
+    {
+        if (slider == &_gainSlider) {
+            _gain = slider->getValue();
+        }
+    }
+
+
 private:
     //==============================================================================
-    VoicesVector _voices;
+    int _width;
+    int _height;
 
-    Midi midi; // TODO : midi dans le MainComponent?
+    VoicesVector _voices;
+    float _gain;
+
+    Slider _gainSlider;
+    Label _gainSliderLabel;
+
+    Midi _midi; // TODO : midi dans le MainComponent?
 };
 
 

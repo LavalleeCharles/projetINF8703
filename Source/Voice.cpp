@@ -69,6 +69,12 @@ void Voice::setWaveType(int waveType)
 }
 
 
+void Voice::setPitchModulation(double pitchModulationValue)
+{
+    _oscillateur.setPitchModulation(pitchModulationValue);
+}
+
+
 void Voice::setAttackRate(double rate)
 {
     _envelope.setAttackRate(rate);

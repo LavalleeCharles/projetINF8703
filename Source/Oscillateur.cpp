@@ -10,7 +10,7 @@ double Oscillateur::_sampleRate = 44100.0;
 int Oscillateur::_waveType = 0;
 
 
-Oscillateur::Oscillateur() : _frequency(440.0), _phase(0.0), _f0(440.0)
+Oscillateur::Oscillateur() : _frequency(440.0), _phase(0.0), _f0(440.0), _pitchModulation(1.0)
 {
     setPhaseStep();
     _t = 0.0;
@@ -50,10 +50,17 @@ void Oscillateur::setFrequency(int note)
 }
 
 
+void Oscillateur::setPitchModulation(double pitchModulation)
+{
+    _pitchModulation = std::pow(2.0, (pitchModulation - 8192) / (49152)); // 49152 = 4096 * 12
+    setPhaseStep();
+}
+
+
 void Oscillateur::setPhaseStep()
 {
-    _dt = _frequency / _sampleRate; // pour polyBLEP
-	_phaseStep = _frequency * _2_PI / _sampleRate;
+    _dt = _pitchModulation * _frequency / _sampleRate; // pour polyBLEP
+	_phaseStep = _pitchModulation * _frequency * _2_PI / _sampleRate;
 }
 
 

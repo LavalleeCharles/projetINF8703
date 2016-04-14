@@ -57,6 +57,16 @@ void VoicesVector::noteOff(int note, float velocity)
 }
 
 
+void VoicesVector::pitchWheelOn(double pitchWheelValue)
+{
+    for (std::size_t i = 0; i < _size; ++i) {
+        if (_voices[i]->isPlaying()) {
+            _voices[i]->setPitchModulation(pitchWheelValue);
+        }
+    }
+}
+
+
 Voice* VoicesVector::getFreeVoice()
 {
     for (std::size_t i = 0; i < _size; ++i) {

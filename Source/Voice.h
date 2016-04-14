@@ -27,6 +27,7 @@ public:
 
     // Oscillator parameters
     static void setWaveType(int waveType);
+    void setPitchModulation(double pitchModulationValue);
 
     // Envelope parameters
     inline void setAttackLevel(double level) { _envelope.setAttackLevel(level); }

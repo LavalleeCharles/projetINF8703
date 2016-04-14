@@ -15,6 +15,26 @@
 #include "FilterGUI.h"
 #include "EnvelopeGUI.h"
 
+/*
+TODO: -- list --
+ - Clean code (rename stuff)
+ - support midi keyboard
+ - normalize output? (polyphonic is too loud)
+ - modify parameters while playing ...
+ - PolyBlep ?
+ - remove hardCoded value in GUI
+ - add effects ?
+ - multi oscillator
+ - filter envelope
+ - LFO
+ - vibrato
+ - pitch wheel
+ - mem leak
+
+
+*/
+
+
 
 //==============================================================================
 /*

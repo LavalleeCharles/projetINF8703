@@ -38,7 +38,7 @@ public:
 
         // Filter Resonance
         addAndMakeVisible(_filterResValue);
-        _filterResValue.setRange(0.0, 1.0);
+        _filterResValue.setRange(0.0, 0.99);
         _filterResValue.setTextValueSuffix(" ");
         _filterResValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _filterResValue.getTextBoxHeight());
         _filterResValue.addListener(this);

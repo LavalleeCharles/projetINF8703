@@ -17,7 +17,7 @@ public:
 
         // Envelope Attack Level
         addAndMakeVisible(_envelopeAttackLevelValue);
-        _envelopeAttackLevelValue.setRange(0.0, 1.0);
+        _envelopeAttackLevelValue.setRange(0.01, 1.0);
         _envelopeAttackLevelValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _envelopeAttackLevelValue.getTextBoxHeight());
         _envelopeAttackLevelValue.addListener(this);
         addAndMakeVisible(_envelopeAttackLevelLabel);
@@ -26,7 +26,7 @@ public:
 
         // Envelope Decay Level
         addAndMakeVisible(_envelopeDecayLevelValue);
-        _envelopeDecayLevelValue.setRange(0.0, 1.0);
+        _envelopeDecayLevelValue.setRange(0.01, 1.0);
         _envelopeDecayLevelValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _envelopeAttackLevelValue.getTextBoxHeight());
         _envelopeDecayLevelValue.addListener(this);
         addAndMakeVisible(_envelopeDecayLevelLabel);
@@ -46,7 +46,7 @@ public:
 
         // Envelope Decay Rate
         addAndMakeVisible(_envelopeDecayRateValue);
-        _envelopeDecayRateValue.setRange(0.0, 2.0);
+        _envelopeDecayRateValue.setRange(0.01, 2.0);
         _envelopeDecayRateValue.setSkewFactor(0.5);
         _envelopeDecayRateValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _envelopeAttackLevelValue.getTextBoxHeight());
         _envelopeDecayRateValue.setTextValueSuffix(" s");

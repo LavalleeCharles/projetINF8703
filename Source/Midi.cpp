@@ -94,11 +94,18 @@ void Midi::setMidiInput(int id)
 }
 
 
-void Midi::handleIncomingMidiMessage (MidiInput* source, const MidiMessage& message)
-{
+void Midi::handleIncomingMidiMessage (MidiInput* source, const MidiMessage& message) {
     const ScopedValueSetter<bool> scopedInputFlag(isAddingFromMidiInput, true);
-    keyboardState.processNextMidiEvent (message);
-    postMessageToList (message, source->getName());
+    keyboardState.processNextMidiEvent(message);
+
+    if (message.isNoteOn()) {
+        _voices->noteOn(message.getNoteNumber(), message.getVelocity());
+    } else if (message.isNoteOff()) {
+        _voices->noteOff(message.getNoteNumber(), message.getVelocity());
+    } else if (message.isPitchWheel()) {
+        _voices->pitchWheelOn(message.getPitchWheelValue());
+    }
+    postMessageToList(message, source->getName());
 }
 
 
@@ -131,6 +138,6 @@ void Midi::handleNoteOff(MidiKeyboardState* , int midiChannel, int midiNoteNumbe
 void Midi::comboBoxChanged(ComboBox* comboBox) {
     if (comboBox == &midiInputList) {
         setMidiInput(midiInputList.getSelectedItemIndex());
-        setKeyboardFocus();
+        //setKeyboardFocus();
     }
 }

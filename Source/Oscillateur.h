@@ -14,6 +14,7 @@ public:
     static void setSampleRate(double sampleRate);
     static void setWaveType(int waveType);
     void setFrequency(int note);
+    void setPitchModulation(double pitchModulation);
     void reset();
 
     double nextSample();
@@ -38,6 +39,8 @@ private:
     double _PI;
     double _2_PI;
     const double _f0;
+
+    double _pitchModulation;
 
     double (Oscillateur::*_waveTypeTable[NB_OF_WAVE_TYPES])(double);
 };
