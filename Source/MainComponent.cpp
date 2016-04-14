@@ -27,13 +27,41 @@ public:
     //==============================================================================
     MainContentComponent()
     {
+        // Default envelope values
+        double _defaultEnvelopeAttackLevel = 1.0;
+        double _defaultEnvelopeDecayLevel = 0.8;
+        double _defaultEnvelopeAttackRate = 0.1;
+        double _defaultEnvelopeDecayRate = 0.3;
+        double _defaultEnvelopeReleaseRate = 0.3;
+
+        // Default filter values
+        int _defaultFilterType = noFilter;
+        double _defaultFilterCutoff = 1000.0;
+        double _defaultFilterResonance = 0.1;
+
+
         addAndMakeVisible(_synth);
+        _synth.setDefaultEnvelopeValues(_defaultEnvelopeAttackLevel,
+                                        _defaultEnvelopeDecayLevel,
+                                        _defaultEnvelopeAttackRate,
+                                        _defaultEnvelopeDecayRate,
+                                        _defaultEnvelopeReleaseRate);
+
+
 
         addAndMakeVisible(_oscillatorGUI);
 
         addAndMakeVisible(_filterGUI);
+        _filterGUI.setDefaultValue(_defaultFilterType,
+                                   _defaultFilterCutoff,
+                                   _defaultFilterResonance);
 
         addAndMakeVisible(_envelopeGUI);
+        _envelopeGUI.setDefaultValue(_defaultEnvelopeAttackLevel,
+                                     _defaultEnvelopeDecayLevel,
+                                     _defaultEnvelopeAttackRate,
+                                     _defaultEnvelopeDecayRate,
+                                     _defaultEnvelopeReleaseRate);
         _envelopeGUI.setSynth(&_synth);
 
         setSize (1000, 600);

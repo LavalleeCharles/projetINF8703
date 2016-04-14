@@ -53,7 +53,6 @@ OBJECTS := \
   $(OBJDIR)/VoicesVector_c2efacad.o \
   $(OBJDIR)/Envelope_2c60e259.o \
   $(OBJDIR)/Voice_616ec393.o \
-  $(OBJDIR)/Synthesizer_32000be9.o \
   $(OBJDIR)/Midi_2f4eef2a.o \
   $(OBJDIR)/Oscillateur_baf8f686.o \
   $(OBJDIR)/MainComponent_a6ffb4a5.o \
@@ -108,11 +107,6 @@ $(OBJDIR)/Envelope_2c60e259.o: ../../Source/Envelope.cpp
 $(OBJDIR)/Voice_616ec393.o: ../../Source/Voice.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Voice.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/Synthesizer_32000be9.o: ../../Source/Synthesizer.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling Synthesizer.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Midi_2f4eef2a.o: ../../Source/Midi.cpp

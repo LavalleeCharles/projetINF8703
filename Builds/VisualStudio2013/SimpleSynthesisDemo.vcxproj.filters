@@ -331,9 +331,6 @@
     <ClCompile Include="..\..\Source\Voice.cpp">
       <Filter>SimpleSynthesisDemo\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Synthesizer.cpp">
-      <Filter>SimpleSynthesisDemo\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Midi.cpp">
       <Filter>SimpleSynthesisDemo\Source</Filter>
     </ClCompile>

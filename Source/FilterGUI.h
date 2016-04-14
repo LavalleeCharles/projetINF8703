@@ -8,7 +8,7 @@
 
 class FilterGUI : public Component,
                   private ComboBox::Listener,
-                  private Label::Listener
+                  private Slider::Listener
 {
 public:
     FilterGUI()
@@ -20,7 +20,6 @@ public:
         addAndMakeVisible(_filterTypeComboBox);
         StringArray filterTypesLabel = { "Low Pass", "High Pass", "Band Pass", "No Filter" };
         _filterTypeComboBox.addItemList(filterTypesLabel , 1);
-        _filterTypeComboBox.setSelectedId(4, dontSendNotification);
         _filterTypeComboBox.addListener(this);
         addAndMakeVisible(_filterTypeLabel);
         _filterTypeLabel.setText("Filter Type", dontSendNotification);
@@ -28,10 +27,10 @@ public:
 
         // Filter Cutoff
         addAndMakeVisible(_filterCutoffValue);
-        _filterCutoffValue.setText("1000.0", dontSendNotification);
-        _filterCutoffValue.setEditable(true);
-        _filterCutoffValue.setColour(Label::backgroundColourId, Colours::white);
-        _filterCutoffValue.setColour(Label::outlineColourId, Colours::grey);
+        _filterCutoffValue.setRange(1, 22050);
+        _filterCutoffValue.setSkewFactor(0.5);
+        _filterCutoffValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _filterCutoffValue.getTextBoxHeight());
+        _filterCutoffValue.setTextValueSuffix(" Hz");
         _filterCutoffValue.addListener(this);
         addAndMakeVisible(_filterCutoffLabel);
         _filterCutoffLabel.setText("Cutoff:", dontSendNotification);
@@ -39,16 +38,18 @@ public:
 
         // Filter Resonance
         addAndMakeVisible(_filterResValue);
-        _filterResValue.setText("0.1", dontSendNotification);
-        _filterResValue.setEditable(true);
-        _filterResValue.setColour(Label::backgroundColourId, Colours::white);
-        _filterResValue.setColour(Label::outlineColourId, Colours::grey);
+        _filterResValue.setRange(0.0, 1.0);
+        _filterResValue.setTextValueSuffix(" ");
+        _filterResValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _filterResValue.getTextBoxHeight());
         _filterResValue.addListener(this);
         addAndMakeVisible(_filterResLabel);
         _filterResLabel.setText("Resonance:", dontSendNotification);
         _filterResLabel.attachToComponent(&_filterResValue, true);
 
-        setSize(800, 80);
+        _width = 1000;
+        _height = 80;
+
+        setSize(_width, _height);
     }
 
     ~FilterGUI()
@@ -60,7 +61,7 @@ public:
     {
         // (Our component is opaque, so we must completely fill the background with a solid colour)
         // g.fillAll (Colours::black);
-        g.drawRoundedRectangle(10, 10, 610, 70, 10, 1);
+        g.drawRoundedRectangle(10, 10, _width - 190, _height - 10, 10, 1);
     }
 
     void resized() override
@@ -68,10 +69,17 @@ public:
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.
-        _filterLabel.setBounds(10, 20, 80, 20);
-        _filterTypeComboBox.setBounds(120, 40, 80, 20);
-        _filterCutoffValue.setBounds(320, 40, 80, 20);
-        _filterResValue.setBounds(520, 40, 80, 20);
+        int height_4 = _height / 4;
+        _filterLabel.setBounds(10, height_4, 80, height_4);
+        _filterTypeComboBox.setBounds(120, height_4 + 20, 80, height_4);
+        _filterCutoffValue.setBounds(320, height_4 + 20, 180, height_4);
+        _filterResValue.setBounds(620, height_4 + 20, 180, height_4);
+    }
+
+    void setDefaultValue(int dFilType, double dFilCut, double dFilRes) {
+        _filterTypeComboBox.setSelectedId(dFilType + 1, dontSendNotification);
+        _filterCutoffValue.setValue(dFilCut);
+        _filterResValue.setValue(dFilRes);
     }
 
 
@@ -85,28 +93,31 @@ private:
         }
     }
 
-    void labelTextChanged(Label* label) override
+    void sliderValueChanged(Slider* slider) override
     {
-        if (label == &_filterCutoffValue) {
-            Voice::setFilterCutoff(label->getText().getDoubleValue());
+        if (slider == &_filterCutoffValue) {
+            Voice::setFilterCutoff(slider->getValue());
             //midi.setFocus();
-        } else if (label == &_filterResValue) {
-            Voice::setFilterResonance( label->getText().getDoubleValue());
+        } else if (slider == &_filterResValue) {
+            Voice::setFilterResonance(slider->getValue());
             //midi.setFocus();
         }
     }
 
 
 private:
+    int _width;
+    int _height;
+
     Label _filterLabel;
 
     ComboBox _filterTypeComboBox;
     Label _filterTypeLabel;
 
-    Label _filterCutoffValue;
+    Slider _filterCutoffValue;
     Label _filterCutoffLabel;
 
-    Label _filterResValue;
+    Slider _filterResValue;
     Label _filterResLabel;
 
 };

@@ -133,7 +133,6 @@
     <ClCompile Include="..\..\Source\VoicesVector.cpp"/>
     <ClCompile Include="..\..\Source\Envelope.cpp"/>
     <ClCompile Include="..\..\Source\Voice.cpp"/>
-    <ClCompile Include="..\..\Source\Synthesizer.cpp"/>
     <ClCompile Include="..\..\Source\Midi.cpp"/>
     <ClCompile Include="..\..\Source\Oscillateur.cpp"/>
     <ClCompile Include="..\..\Source\MainComponent.cpp"/>

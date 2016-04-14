@@ -7,7 +7,7 @@
 
 
 class EnvelopeGUI : public Component,
-                     private Label::Listener
+                     private Slider::Listener
 {
 public:
     EnvelopeGUI()
@@ -17,10 +17,8 @@ public:
 
         // Envelope Attack Level
         addAndMakeVisible(_envelopeAttackLevelValue);
-        _envelopeAttackLevelValue.setText("1.0", dontSendNotification);
-        _envelopeAttackLevelValue.setEditable(true);
-        _envelopeAttackLevelValue.setColour(Label::backgroundColourId, Colours::white);
-        _envelopeAttackLevelValue.setColour(Label::outlineColourId, Colours::grey);
+        _envelopeAttackLevelValue.setRange(0.0, 1.0);
+        _envelopeAttackLevelValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _envelopeAttackLevelValue.getTextBoxHeight());
         _envelopeAttackLevelValue.addListener(this);
         addAndMakeVisible(_envelopeAttackLevelLabel);
         _envelopeAttackLevelLabel.setText("Attack Level:", dontSendNotification);
@@ -28,10 +26,8 @@ public:
 
         // Envelope Decay Level
         addAndMakeVisible(_envelopeDecayLevelValue);
-        _envelopeDecayLevelValue.setText("0.8", dontSendNotification);
-        _envelopeDecayLevelValue.setEditable(true);
-        _envelopeDecayLevelValue.setColour(Label::backgroundColourId, Colours::white);
-        _envelopeDecayLevelValue.setColour(Label::outlineColourId, Colours::grey);
+        _envelopeDecayLevelValue.setRange(0.0, 1.0);
+        _envelopeDecayLevelValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _envelopeAttackLevelValue.getTextBoxHeight());
         _envelopeDecayLevelValue.addListener(this);
         addAndMakeVisible(_envelopeDecayLevelLabel);
         _envelopeDecayLevelLabel.setText("Decay Level:", dontSendNotification);
@@ -39,10 +35,10 @@ public:
 
         // Envelope Attack Rate
         addAndMakeVisible(_envelopeAttackRateValue);
-        _envelopeAttackRateValue.setText("1.0", dontSendNotification);
-        _envelopeAttackRateValue.setEditable(true);
-        _envelopeAttackRateValue.setColour(Label::backgroundColourId, Colours::white);
-        _envelopeAttackRateValue.setColour(Label::outlineColourId, Colours::grey);
+        _envelopeAttackRateValue.setRange(0.0, 2.0);
+        _envelopeAttackRateValue.setSkewFactor(0.5);
+        _envelopeAttackRateValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _envelopeAttackLevelValue.getTextBoxHeight());
+        _envelopeAttackRateValue.setTextValueSuffix(" s");
         _envelopeAttackRateValue.addListener(this);
         addAndMakeVisible(_envelopeAttackRateLabel);
         _envelopeAttackRateLabel.setText("Attack Rate:", dontSendNotification);
@@ -50,10 +46,10 @@ public:
 
         // Envelope Decay Rate
         addAndMakeVisible(_envelopeDecayRateValue);
-        _envelopeDecayRateValue.setText("1.0", dontSendNotification);
-        _envelopeDecayRateValue.setEditable(true);
-        _envelopeDecayRateValue.setColour(Label::backgroundColourId, Colours::white);
-        _envelopeDecayRateValue.setColour(Label::outlineColourId, Colours::grey);
+        _envelopeDecayRateValue.setRange(0.0, 2.0);
+        _envelopeDecayRateValue.setSkewFactor(0.5);
+        _envelopeDecayRateValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _envelopeAttackLevelValue.getTextBoxHeight());
+        _envelopeDecayRateValue.setTextValueSuffix(" s");
         _envelopeDecayRateValue.addListener(this);
         addAndMakeVisible(_envelopeDecayRateLabel);
         _envelopeDecayRateLabel.setText("Decay Rate:", dontSendNotification);
@@ -61,17 +57,19 @@ public:
 
         // Envelope Release Rate
         addAndMakeVisible(_envelopeReleaseRateValue);
-        _envelopeReleaseRateValue.setText("1.0", dontSendNotification);
-        _envelopeReleaseRateValue.setEditable(true);
-        _envelopeReleaseRateValue.setColour(Label::backgroundColourId, Colours::white);
-        _envelopeReleaseRateValue.setColour(Label::outlineColourId, Colours::grey);
+        _envelopeReleaseRateValue.setRange(0.0, 5.0);
+        _envelopeReleaseRateValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _envelopeAttackLevelValue.getTextBoxHeight());
+        _envelopeReleaseRateValue.setSkewFactor(0.8);
+        _envelopeReleaseRateValue.setTextValueSuffix(" s");
         _envelopeReleaseRateValue.addListener(this);
         addAndMakeVisible(_envelopeReleaseRateLabel);
         _envelopeReleaseRateLabel.setText("Release Rate:", dontSendNotification);
         _envelopeReleaseRateLabel.attachToComponent(&_envelopeReleaseRateValue, true);
 
+        _width = 1100;
+        _height = 100;
 
-        setSize(800, 100);
+        setSize(_width, _height);
     }
 
     ~EnvelopeGUI()
@@ -89,7 +87,7 @@ public:
     {
         // (Our component is opaque, so we must completely fill the background with a solid colour)
         // g.fillAll (Colours::black);
-        g.drawRoundedRectangle(10, 10, 610, 90, 10, 1);
+        g.drawRoundedRectangle(10, 10, _width - 190, _height - 10, 10, 1);
     }
 
     void resized() override
@@ -97,54 +95,66 @@ public:
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.
-        _envelopeLabel.setBounds(10, 20, 80, 20);
-        _envelopeAttackLevelValue.setBounds(120, 40, 80, 20);
-        _envelopeDecayLevelValue.setBounds(320, 40, 80, 20);
-        _envelopeAttackRateValue.setBounds(120, 60, 80, 20);
-        _envelopeDecayRateValue.setBounds(320, 60, 80, 20);
-        _envelopeReleaseRateValue.setBounds(520, 60, 80, 20);
+        int height_4 = _height / 4;
+        _envelopeLabel.setBounds(10, height_4, 80, height_4);
+        _envelopeAttackLevelValue.setBounds(120, height_4 + 20, 180, height_4);
+        _envelopeDecayLevelValue.setBounds(420, height_4 + 20, 180, height_4);
+        _envelopeAttackRateValue.setBounds(120, height_4 + 40, 180, height_4);
+        _envelopeDecayRateValue.setBounds(420, height_4 + 40, 180, height_4);
+        _envelopeReleaseRateValue.setBounds(720, height_4 + 40, 180, height_4);
+    }
+
+    void setDefaultValue(double dEnvAtkLvl, double dEnvDcyLvl, double dEnvAtkRt, double dEnvDcyRt, double dEnvRelRt) {
+        _envelopeAttackLevelValue.setValue(dEnvAtkLvl);
+        _envelopeDecayLevelValue.setValue(dEnvDcyLvl);
+        _envelopeAttackRateValue.setValue(dEnvAtkRt);
+        _envelopeDecayRateValue.setValue(dEnvDcyRt);
+        _envelopeReleaseRateValue.setValue(dEnvRelRt);
     }
 
 
 private:
-    void labelTextChanged(Label* label) override
+    void sliderValueChanged(Slider* slider) override
     {
-        if (label == &_envelopeAttackLevelValue) {
-            _synth->updateEnvelope(label->getText().getDoubleValue(), Envelope::attackLevel);
+        if (slider == &_envelopeAttackLevelValue) {
+            _synth->updateEnvelope(slider->getValue(), Envelope::attackLevel);
             //midi.setFocus();
-        } else if (label == &_envelopeDecayLevelValue) {
-            _synth->updateEnvelope(label->getText().getDoubleValue(), Envelope::decayLevel);
+        } else if (slider == &_envelopeDecayLevelValue) {
+            _synth->updateEnvelope(slider->getValue(), Envelope::decayLevel);
             //midi.setFocus();
-        } else if (label == &_envelopeAttackRateValue) {
-            _synth->updateEnvelope(label->getText().getDoubleValue(), Envelope::attackRate);
+        } else if (slider == &_envelopeAttackRateValue) {
+            _synth->updateEnvelope(slider->getValue(), Envelope::attackRate);
             //midi.setFocus();
-        } else if (label == &_envelopeDecayRateValue) {
-            _synth->updateEnvelope(label->getText().getDoubleValue(), Envelope::decayRate);
+        } else if (slider == &_envelopeDecayRateValue) {
+            _synth->updateEnvelope(slider->getValue(), Envelope::decayRate);
             //midi.setFocus();
-        } else if (label == &_envelopeReleaseRateValue) {
-            _synth->updateEnvelope(label->getText().getDoubleValue(), Envelope::releaseRate);
+        } else if (slider == &_envelopeReleaseRateValue) {
+            _synth->updateEnvelope(slider->getValue(), Envelope::releaseRate);
             //midi.setFocus();
         }
     }
 
 
 private:
+    int _width;
+    int _height;
+
     Synthesizer* _synth;
     Label _envelopeLabel;
 
-    Label _envelopeAttackLevelValue;
+    Slider _envelopeAttackLevelValue;
     Label _envelopeAttackLevelLabel;
 
-    Label _envelopeDecayLevelValue;
+    Slider _envelopeDecayLevelValue;
     Label _envelopeDecayLevelLabel;
 
-    Label _envelopeAttackRateValue;
+    Slider _envelopeAttackRateValue;
     Label _envelopeAttackRateLabel;
 
-    Label _envelopeDecayRateValue;
+    Slider _envelopeDecayRateValue;
     Label _envelopeDecayRateLabel;
 
-    Label _envelopeReleaseRateValue;
+    Slider _envelopeReleaseRateValue;
     Label _envelopeReleaseRateLabel;
 };
 

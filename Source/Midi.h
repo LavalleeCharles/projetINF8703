@@ -20,7 +20,7 @@ public:
 
     inline void setVoicesVector(VoicesVector* v) { _voices = v; }
 
-    void setFocus();
+    void setKeyboardFocus();
 
 private:
     void setMidiInput(int id);

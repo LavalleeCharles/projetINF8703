@@ -13,8 +13,6 @@ public:
     VoicesVector();
     ~VoicesVector();
 
-    //Voice* operator[](std::size_t i) { return _voices[i]; } // TODO : remove this for warnings?
-
     void setNumberOfVoices(std::size_t nbOfVoices);
     std::size_t size() const;
 

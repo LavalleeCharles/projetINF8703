@@ -69,7 +69,7 @@ int Midi::getNumberOfKeyboardNotes() const
 }
 
 
-void Midi::setFocus()
+void Midi::setKeyboardFocus()
 {
     keyboardComponent.grabKeyboardFocus();
     keyboardComponent.toFront(true);
@@ -131,6 +131,6 @@ void Midi::handleNoteOff(MidiKeyboardState* , int midiChannel, int midiNoteNumbe
 void Midi::comboBoxChanged(ComboBox* comboBox) {
     if (comboBox == &midiInputList) {
         setMidiInput(midiInputList.getSelectedItemIndex());
-        setFocus();
+        setKeyboardFocus();
     }
 }

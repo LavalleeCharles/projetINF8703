@@ -41,14 +41,7 @@ public:
         // For more details, see the help for AudioProcessor::prepareToPlay()
 
         Voice::setSampleRate(sampleRate);
-        Voice::setWaveType(Oscillateur::sine);
-        _voices.updateEnvelope(0.1, Envelope::attackRate);
-        _voices.updateEnvelope(0.3, Envelope::decayRate);
-        _voices.updateEnvelope(0.5, Envelope::releaseRate);
-        _voices.updateEnvelope(1.0, Envelope::attackLevel);
-        _voices.updateEnvelope(0.8, Envelope::decayLevel);
-        // TODO : setter le filtre
-		
+
         String message;
         message << "samplesPerBlockExpected = " << samplesPerBlockExpected << newLine;
         message << "sampleRate = " << sampleRate << newLine;
@@ -78,8 +71,8 @@ public:
         float *const buffer1 = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
         for (int i = 0; i < bufferToFill.numSamples; ++i) {
             float value = _voices.nextSample();
-            buffer0[i] = value * 0.5f;
-            buffer1[i] = value * 0.5f;
+            buffer0[i] = value * 0.25;
+            buffer1[i] = value * 0.25;
         }
     }
 
@@ -118,17 +111,17 @@ public:
 
     void focusGained(FocusChangeType /*cause*/) override
     {
-        midi.setFocus();
+        //midi.setFocus();
     }
 
     void moved() override
     {
-        midi.setFocus();
+        //midi.setFocus();
     }
 
     void broughtToFront() override
     {
-        midi.setFocus();
+        //midi.setFocus();
     }
 
 
@@ -136,6 +129,21 @@ public:
         _voices.updateEnvelope(value, paramId);
     }
 
+
+    void setDefaultEnvelopeValues(double dEnvAtkLvl, double dEnvDcyLvl, double dEnvAtkRt, double dEnvDcyRt, double dEnvRelRt) {
+        Voice::setWaveType(Oscillateur::sine);
+        _voices.updateEnvelope(dEnvAtkLvl, Envelope::attackLevel);
+        _voices.updateEnvelope(dEnvDcyLvl, Envelope::decayLevel);
+        _voices.updateEnvelope(dEnvAtkRt, Envelope::attackRate);
+        _voices.updateEnvelope(dEnvDcyRt, Envelope::decayRate);
+        _voices.updateEnvelope(dEnvRelRt, Envelope::releaseRate);
+    }
+
+    void setDefaultFilterValues(int dFilType, double dFilCut, double dFilRes) {
+        Voice::setFilterType(dFilType);
+        Voice::setFilterCutoff(dFilCut);
+        Voice::setFilterResonance(dFilRes);
+    }
 
 private:
     //==============================================================================

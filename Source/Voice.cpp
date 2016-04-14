@@ -42,7 +42,7 @@ void Voice::reset()
 {
     _oscillateur.reset();
     _envelope.reset();
-    _filter.reset();
+    //_filter.reset();
 }
 
 

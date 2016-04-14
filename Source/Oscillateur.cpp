@@ -108,7 +108,7 @@ double Oscillateur::sawWave(double phase)
 
 double Oscillateur::squareWave(double phase)
 {
-    return phase <= _PI ? 1.0: -1.0;
+    return phase <= _PI ? 1.0 : -1.0;
 }
 
 

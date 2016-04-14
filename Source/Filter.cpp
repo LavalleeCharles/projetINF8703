@@ -1,5 +1,6 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <iostream>
 #include "Filter.h"
 
 
@@ -34,7 +35,7 @@ Filter::~Filter()
 
 void Filter::reset()
 {
-    for (int i = 0; i < 2; ++i) {
+    /*for (int i = 0; i < 2; ++i) {
         _prevIn[i] = 0.0;
         _prevOut[i] = 0.0;
         _a[i] = 0.0;
@@ -42,7 +43,7 @@ void Filter::reset()
 
     _b[0] = 1.0;
     _b[1] = 0.0;
-    _b[2] = 0.0;
+    _b[2] = 0.0;*/
 }
 
 
@@ -84,7 +85,7 @@ void Filter::setFilterType(int type)
 
 double Filter::filterValue(double value)
 {
-    double out = 0.0;
+    double out;
     if (_filterType == noFilter) {
         out = value;
     } else {
