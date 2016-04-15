@@ -14,24 +14,20 @@
 #include "OscillatorGUI.h"
 #include "FilterGUI.h"
 #include "EnvelopeGUI.h"
+#include "LfoGUI.h"
 
 /*
 TODO: -- list --
  - Clean code (rename stuff)
- - support midi keyboard
+ - LFO
  - normalize output? (polyphonic is too loud)
- - modify parameters while playing ...
  - PolyBlep ?
  - remove hardCoded value in GUI
  - add effects ?
  - multi oscillator
  - filter envelope
- - LFO
  - vibrato
- - pitch wheel
- - mem leak
-
-
+ - mem leak...
 */
 
 
@@ -67,14 +63,14 @@ public:
                                         _defaultEnvelopeDecayRate,
                                         _defaultEnvelopeReleaseRate);
 
-
-
-        addAndMakeVisible(_oscillatorGUI);
+        addAndMakeVisible(_oscillatorGUI); // TODO ?
+        _oscillatorGUI.setSynth(&_synth);
 
         addAndMakeVisible(_filterGUI);
         _filterGUI.setDefaultValue(_defaultFilterType,
                                    _defaultFilterCutoff,
                                    _defaultFilterResonance);
+        _filterGUI.setSynth(&_synth);
 
         addAndMakeVisible(_envelopeGUI);
         _envelopeGUI.setDefaultValue(_defaultEnvelopeAttackLevel,
@@ -83,6 +79,9 @@ public:
                                      _defaultEnvelopeDecayRate,
                                      _defaultEnvelopeReleaseRate);
         _envelopeGUI.setSynth(&_synth);
+
+        addAndMakeVisible(_lfoGUI);
+        _lfoGUI.setSynth(&_synth);
 
         setSize (1000, 600);
     }
@@ -109,10 +108,13 @@ public:
         _filterGUI.setTopLeftPosition(0, 80);
         _filterGUI.resized();
 
-        _envelopeGUI.setTopLeftPosition(0, 160);
+        _lfoGUI.setTopLeftPosition(0, 160);
+        _lfoGUI.resized();
+
+        _envelopeGUI.setTopLeftPosition(0, 240);
         _envelopeGUI.resized();
 
-        _synth.setTopLeftPosition(0, 260);
+        _synth.setTopLeftPosition(0, 340);
         _synth.resized();
     }
 
@@ -126,6 +128,7 @@ private:
     OscillatorGUI _oscillatorGUI;
     FilterGUI _filterGUI;
     EnvelopeGUI _envelopeGUI;
+    LfoGUI _lfoGUI;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
 };

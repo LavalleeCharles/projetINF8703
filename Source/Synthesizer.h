@@ -65,19 +65,6 @@ public:
     {
         // Your audio-processing code goes here!
         // For more details, see the help for AudioProcessor::getNextAudioBlock()
-        /*
-        float *const buffer0 = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
-        float *const buffer1 = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
-        for (int i = 0; i < bufferToFill.numSamples; ++i) {
-            float value = _phase <= M_PI ? 1.0: -1.0;
-            buffer0[i] = value * 0.5f;
-            buffer1[i] = value * 0.5f;
-
-            _phase += _phaseStep;
-            if (_phase >= M_2_PI) {
-
-            }
-        }*/
 
         float *const buffer0 = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
         float *const buffer1 = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
@@ -146,8 +133,43 @@ public:
     }
 
 
+    void updateOscillator(int waveType) {
+        _voices.updateOscillator(waveType);
+    }
+
+
+    void updateFilterCutoff(double cutoff) {
+        _voices.updateFilterCutoff(cutoff);
+    }
+
+
+    void updateFilterRes(double res) {
+        _voices.updateFilterResonance(res);
+    }
+
+
+    void updateFilterType(int filterType) {
+        _voices.updateFilterType(filterType);
+    }
+
+
+    void updateLfoAmount(double amount) {
+        _voices.updateLfoAmount(amount);
+    }
+
+
+    void updateLfoFreq(double freq) {
+        _voices.updateLfoFreq(freq);
+    }
+
+
+    void updateLfoWaveType(int waveType) {
+        _voices.updateLfoWaveType(waveType);
+    }
+
+
     void setDefaultEnvelopeValues(double dEnvAtkLvl, double dEnvDcyLvl, double dEnvAtkRt, double dEnvDcyRt, double dEnvRelRt) {
-        Voice::setWaveType(Oscillateur::sine);
+        _voices.updateOscillator(Oscillateur::sine); // TODO
         _voices.updateEnvelope(dEnvAtkLvl, Envelope::attackLevel);
         _voices.updateEnvelope(dEnvDcyLvl, Envelope::decayLevel);
         _voices.updateEnvelope(dEnvAtkRt, Envelope::attackRate);
@@ -156,9 +178,9 @@ public:
     }
 
     void setDefaultFilterValues(int dFilType, double dFilCut, double dFilRes) {
-        Voice::setFilterType(dFilType);
-        Voice::setFilterCutoff(dFilCut);
-        Voice::setFilterResonance(dFilRes);
+        _voices.updateFilterType(dFilType);
+        _voices.updateFilterCutoff(dFilCut);
+        _voices.updateFilterResonance(dFilRes);
     }
 
 

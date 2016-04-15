@@ -13,25 +13,26 @@ public:
 
     double filterValue(double value);
 
-    static void setSampleRate(double sampleRate);
+    void setCutoff(double cutoff);
+    inline double getCutoff() { return _cutoff; }
 
-    static void setFilterType(int type);
-    static void setCutoff(double cutoff);
-    static void setResonance(double resonance);
+    static void setSampleRate(double sampleRate);
+    inline static double getSampleRate() { return _sampleRate; }
+
+    void setFilterType(int type);
+    void setResonance(double resonance);
 
     void reset();
+    void updateCoef();
 
 private:
-    static void updateCoef();
-
-private:
-    static int _filterType;
+    int _filterType;
     static double _sampleRate;
-    static double _cutoff;
-    static double _resonance;
+    double _cutoff;
+    double _resonance;
 
-    static double _b[3];
-    static double _a[2];
+    double _b[3];
+    double _a[2];
 
     double _prevIn[2];
     double _prevOut[2];

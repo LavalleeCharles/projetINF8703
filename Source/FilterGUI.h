@@ -3,7 +3,7 @@
 
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Voice.h"
+#include "Synthesizer.h"
 
 
 class FilterGUI : public Component,
@@ -27,7 +27,7 @@ public:
 
         // Filter Cutoff
         addAndMakeVisible(_filterCutoffValue);
-        _filterCutoffValue.setRange(1, 22050);
+        _filterCutoffValue.setRange(1, 22000);
         _filterCutoffValue.setSkewFactor(0.5);
         _filterCutoffValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _filterCutoffValue.getTextBoxHeight());
         _filterCutoffValue.setTextValueSuffix(" Hz");
@@ -38,7 +38,7 @@ public:
 
         // Filter Resonance
         addAndMakeVisible(_filterResValue);
-        _filterResValue.setRange(0.0, 0.99);
+        _filterResValue.setRange(0.01, 0.99);
         _filterResValue.setTextValueSuffix(" ");
         _filterResValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _filterResValue.getTextBoxHeight());
         _filterResValue.addListener(this);
@@ -55,6 +55,10 @@ public:
     ~FilterGUI()
     {
 
+    }
+
+    void setSynth(Synthesizer *synth) {
+        _synth = synth;
     }
 
     void paint (Graphics& g) override
@@ -80,6 +84,7 @@ public:
         _filterTypeComboBox.setSelectedId(dFilType + 1, dontSendNotification);
         _filterCutoffValue.setValue(dFilCut);
         _filterResValue.setValue(dFilRes);
+
     }
 
 
@@ -87,7 +92,7 @@ private:
     void comboBoxChanged(ComboBox* comboBox) override
     {
         if (comboBox == &_filterTypeComboBox) {
-            Voice::setFilterType(comboBox->getSelectedItemIndex());
+            _synth->updateFilterType(comboBox->getSelectedItemIndex());
             //std::cout << comboBox->getSelectedItemIndex() << std::endl;
             //midi.setFocus();
         }
@@ -96,16 +101,18 @@ private:
     void sliderValueChanged(Slider* slider) override
     {
         if (slider == &_filterCutoffValue) {
-            Voice::setFilterCutoff(slider->getValue());
+            _synth->updateFilterCutoff(slider->getValue());
             //midi.setFocus();
         } else if (slider == &_filterResValue) {
-            Voice::setFilterResonance(slider->getValue());
+            _synth->updateFilterRes(slider->getValue());
             //midi.setFocus();
         }
     }
 
 
 private:
+    Synthesizer* _synth;
+
     int _width;
     int _height;
 

@@ -5,12 +5,9 @@
 #include "Oscillateur.h"
 
 
-
 double Oscillateur::_sampleRate = 44100.0;
-int Oscillateur::_waveType = 0;
 
-
-Oscillateur::Oscillateur() : _frequency(440.0), _phase(0.0), _f0(440.0), _pitchModulation(1.0)
+Oscillateur::Oscillateur() : _frequency(440.0), _phase(0.0), _waveType(0), _pitchModulation(1.0)
 {
     setPhaseStep();
     _t = 0.0;
@@ -43,9 +40,9 @@ void Oscillateur::setWaveType(int waveType)
 }
 
 
-void Oscillateur::setFrequency(int note)
+void Oscillateur::setFrequency(double freq)
 {
-    _frequency = _f0 * std::pow(2.0, (note - 81.0) / 12.0);
+    _frequency = freq;
     setPhaseStep();
 }
 
@@ -67,6 +64,8 @@ void Oscillateur::setPhaseStep()
 void Oscillateur::reset()
 {
     _phase = 0.0;
+    _pitchModulation = 1.0;
+    _phaseStep = 0.0;
 }
 
 

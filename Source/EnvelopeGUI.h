@@ -35,7 +35,7 @@ public:
 
         // Envelope Attack Rate
         addAndMakeVisible(_envelopeAttackRateValue);
-        _envelopeAttackRateValue.setRange(0.0, 2.0);
+        _envelopeAttackRateValue.setRange(0.01, 2.0);
         _envelopeAttackRateValue.setSkewFactor(0.5);
         _envelopeAttackRateValue.setTextBoxStyle(Slider::TextBoxLeft, false, 80, _envelopeAttackLevelValue.getTextBoxHeight());
         _envelopeAttackRateValue.setTextValueSuffix(" s");

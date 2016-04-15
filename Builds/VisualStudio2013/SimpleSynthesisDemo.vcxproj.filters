@@ -1635,6 +1635,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\LfoGUI.h">
+      <Filter>SimpleSynthesisDemo\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\OscillatorGUI.h">
       <Filter>SimpleSynthesisDemo\Source</Filter>
     </ClInclude>

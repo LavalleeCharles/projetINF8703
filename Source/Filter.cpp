@@ -6,14 +6,9 @@
 
 
 double Filter::_sampleRate = 44100.0;
-double Filter::_cutoff = 1000.0;
-double Filter::_resonance = 0.1;
-double Filter::_b[3] = { 1.0, 0.0, 0.0 };
-double Filter::_a[2] = { 0.0, 0.0 };
-int Filter::_filterType = noFilter;
 
 
-Filter::Filter()
+Filter::Filter() : _cutoff(1000.0), _resonance(0.1), _filterType(noFilter)
 {
     for (int i = 0; i < 2; ++i) {
         _prevIn[i] = 0.0;
@@ -35,7 +30,7 @@ Filter::~Filter()
 
 void Filter::reset()
 {
-    /*for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 2; ++i) {
         _prevIn[i] = 0.0;
         _prevOut[i] = 0.0;
         _a[i] = 0.0;
@@ -43,23 +38,23 @@ void Filter::reset()
 
     _b[0] = 1.0;
     _b[1] = 0.0;
-    _b[2] = 0.0;*/
+    _b[2] = 0.0;
 }
 
 
 void Filter::setSampleRate(double sampleRate)
 {
     _sampleRate = sampleRate;
-    updateCoef();
+    //updateCoef();
 }
 
 
 void Filter::setCutoff(double cutoff)
 {
-    if (_cutoff > _sampleRate / 2.0) {
+    /*if (_cutoff > _sampleRate / 2.0) {
         return;
-    }
-    _cutoff = cutoff;
+    }*/
+    _cutoff = std::fmin(std::fmax(cutoff, 0.0), _sampleRate / 2.0);
     updateCoef();
 }
 

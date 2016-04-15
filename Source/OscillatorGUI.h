@@ -2,8 +2,7 @@
 #define OSCILLATORGUI_H
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Voice.h"
-#include "../JuceLibraryCode/modules/juce_gui_basics/windows/juce_AlertWindow.h"
+#include "Synthesizer.h"
 
 
 class OscillatorGUI : public Component,
@@ -21,7 +20,6 @@ public:
         _filterWaveTypeComboBox.addItemList(waveTypesLabel, 1);
         _filterWaveTypeComboBox.setSelectedId(1, dontSendNotification);
         _filterWaveTypeComboBox.addListener(this);
-
         addAndMakeVisible(_filterWaveTypeLabel);
         _filterWaveTypeLabel.setText("Wave Type", dontSendNotification);
         _filterWaveTypeLabel.attachToComponent(&_filterWaveTypeComboBox, true);
@@ -32,6 +30,10 @@ public:
     ~OscillatorGUI()
     {
 
+    }
+
+    void setSynth(Synthesizer *synth) {
+        _synth = synth;
     }
 
     void paint (Graphics& g) override
@@ -55,13 +57,14 @@ private:
     void comboBoxChanged(ComboBox* comboBox) override
     {
         if (comboBox == &_filterWaveTypeComboBox) {
-            Voice::setWaveType(comboBox->getSelectedItemIndex());
-            //AlertWindow::showMessageBox(AlertWindow::InfoIcon, "test", String(comboBox->getSelectedItemIndex()));
+            _synth->updateOscillator(comboBox->getSelectedItemIndex());
             //midi.setFocus();
         }
     }
 
 private:
+    Synthesizer* _synth;
+
     Label _oscillatorLabel;
 
     ComboBox _filterWaveTypeComboBox;

@@ -10,7 +10,11 @@ VoicesVector::VoicesVector()
 
 VoicesVector::~VoicesVector()
 {
+    for (std::size_t i = 0; i < _size; ++i) {
+        delete _voices[i];
+    }
 
+    _voices.clear();
 }
 
 
@@ -30,19 +34,19 @@ std::size_t VoicesVector::size() const
 }
 
 
-void VoicesVector::noteOn(int note, float velocity)
+void VoicesVector::noteOn(int note, int velocity)
 {
     Voice* newVoice = getFreeVoice();
     if (newVoice != nullptr) {
         newVoice->reset();
-        newVoice->setNoteToPlay(note);
+        newVoice->setNoteToPlay(note, velocity);
         // newVoice->setVelocity(velocity);
         // ...
     }
 }
 
 
-void VoicesVector::noteOff(int note, float velocity)
+void VoicesVector::noteOff(int note, int velocity)
 {
     for (std::size_t i = 0; i < _size; ++i) {
         if (_voices[i]->isPlaying() && note == _voices[i]->getNote()) {
@@ -120,3 +124,57 @@ void VoicesVector::updateEnvelope(double value, Envelope::envelopeParamIndex par
 }
 
 
+void VoicesVector::updateOscillator(int waveType)
+{
+    for (int i = 0; i < _size; ++i) {
+        _voices[i]->setOscillatorWaveType(waveType);
+    }
+}
+
+
+void VoicesVector::updateFilterCutoff(double cutoff)
+{
+    for (int i = 0; i < _size; ++i) {
+        _voices[i]->setFilterCutoff(cutoff);
+    }
+}
+
+
+void VoicesVector::updateFilterResonance(double res)
+{
+    for (int i = 0; i < _size; ++i) {
+        _voices[i]->setFilterResonance(res);
+    }
+}
+
+
+void VoicesVector::updateFilterType(int filterType)
+{
+    for (int i = 0; i < _size; ++i) {
+        _voices[i]->setFilterType(filterType);
+    }
+}
+
+
+void VoicesVector::updateLfoAmount(double amount)
+{
+    for (int i = 0; i < _size; ++i) {
+        _voices[i]->setLfoAmount(amount);
+    }
+}
+
+
+void VoicesVector::updateLfoFreq(double freq)
+{
+    for (int i = 0; i < _size; ++i) {
+        _voices[i]->setLfoFrequency(freq);
+    }
+}
+
+
+void VoicesVector::updateLfoWaveType(int waveType)
+{
+    for (int i = 0; i < _size; ++i) {
+        _voices[i]->setLfoWaveType(waveType);
+    }
+}

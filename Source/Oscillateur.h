@@ -12,8 +12,8 @@ public:
     ~Oscillateur();
 
     static void setSampleRate(double sampleRate);
-    static void setWaveType(int waveType);
-    void setFrequency(int note);
+    void setWaveType(int waveType);
+    void setFrequency(double freq);
     void setPitchModulation(double pitchModulation);
     void reset();
 
@@ -29,7 +29,7 @@ private:
     double triangleWave(double phase);
 
 private:
-    static int _waveType;
+    int _waveType;
     static double _sampleRate;
     double _frequency;
     double _phase;
@@ -38,7 +38,6 @@ private:
     double _t;
     double _PI;
     double _2_PI;
-    const double _f0;
 
     double _pitchModulation;
 

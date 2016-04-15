@@ -15,7 +15,7 @@ public:
     float nextSample();
 
     void reset();
-    void setNoteToPlay(int note);
+    void setNoteToPlay(int note, int velocity);
     void releaseNote();
     bool isPlaying();
     void freeVoice();
@@ -26,7 +26,7 @@ public:
     static void setSampleRate(double sampleRate);
 
     // Oscillator parameters
-    static void setWaveType(int waveType);
+    void setOscillatorWaveType(int waveType);
     void setPitchModulation(double pitchModulationValue);
 
     // Envelope parameters
@@ -37,19 +37,27 @@ public:
     void setReleaseRate(double rate);
 
     // Filter parameters
-    inline static void setFilterType(int type) { Filter::setFilterType(type); }
-    inline static void setFilterCutoff(double cutoff) { Filter::setCutoff(cutoff); }
-    inline static void setFilterResonance(double resonance) { Filter::setResonance(resonance); }
+    inline void setFilterCutoff(double cutoff) { _filter.setCutoff(cutoff);}
+    inline void setFilterType(int type) { _filter.setFilterType(type); }
+    inline void setFilterResonance(double resonance) { _filter.setResonance(resonance); }
+
+    // LFO
+    void setLfoWaveType(int waveType);
+    void setLfoFrequency(double freq);
+    void setLfoAmount(double lfoAmount);
     // --------------------------------------------------
 
 private:
     Oscillateur _oscillateur;
     Envelope _envelope;
     Filter _filter;
+    Oscillateur _lfo;
+    double _lfoAmount;
 
     int _note;
     int _velocity;
     bool _isPlaying;
+    const double _f0;
 };
 
 
