@@ -5,7 +5,8 @@
 
 Voice::Voice() : _note(-1), _velocity(0), _f0(440.0), _isPlaying(false), _lfoAmount(0.0)
 {
-
+    _lfo.setFrequency(2.0); // Default value
+    _filterCutoffValue = 1000.0;
 }
 
 
@@ -45,7 +46,7 @@ void Voice::reset()
     _oscillateur.reset();
     _envelope.reset();
     _lfo.reset();
-    _filter.reset();
+    //_filter.reset();
 }
 
 
@@ -53,7 +54,8 @@ void Voice::setNoteToPlay(int note, int velocity)
 {
     _oscillateur.setFrequency(_f0 * std::pow(2.0, (note - 81.0) / 12.0));
     _envelope.startAttack();
-    _filter.updateCoef();
+    //_filter.updateCoef();
+    _filter.setCutoff(_filterCutoffValue);
     _note = note;
     _velocity = velocity;
     _isPlaying = true;
@@ -98,21 +100,33 @@ void Voice::setReleaseRate(double rate)
 }
 
 
+void Voice::setFilterCutoff(double cutoff)
+{
+    _filter.setCutoff(cutoff);
+    _filterCutoffValue = cutoff;
+    //_lfo.setFrequency(_lfoFreqValue);
+}
+
+
 void Voice::setLfoWaveType(int waveType)
 {
     _lfo.setWaveType(waveType);
+    _filter.setCutoff(_filterCutoffValue);
 }
 
 
 void Voice::setLfoFrequency(double freq)
 {
+    _lfoFreqValue = freq;
     _lfo.setFrequency(freq);
+    _filter.setCutoff(_filterCutoffValue);
 }
 
 
 void Voice::setLfoAmount(double lfoAmount)
 {
     _lfoAmount = lfoAmount;
+    _filter.setCutoff(_filterCutoffValue);
 }
 
 

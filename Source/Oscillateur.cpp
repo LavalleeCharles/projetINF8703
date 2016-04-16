@@ -65,7 +65,7 @@ void Oscillateur::reset()
 {
     _phase = 0.0;
     _pitchModulation = 1.0;
-    _phaseStep = 0.0;
+    //_phaseStep = 0.0;
 }
 
 

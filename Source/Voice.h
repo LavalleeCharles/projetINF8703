@@ -37,7 +37,7 @@ public:
     void setReleaseRate(double rate);
 
     // Filter parameters
-    inline void setFilterCutoff(double cutoff) { _filter.setCutoff(cutoff);}
+    void setFilterCutoff(double cutoff);
     inline void setFilterType(int type) { _filter.setFilterType(type); }
     inline void setFilterResonance(double resonance) { _filter.setResonance(resonance); }
 
@@ -51,8 +51,10 @@ private:
     Oscillateur _oscillateur;
     Envelope _envelope;
     Filter _filter;
+    double _filterCutoffValue ;
     Oscillateur _lfo;
     double _lfoAmount;
+    double _lfoFreqValue;
 
     int _note;
     int _velocity;

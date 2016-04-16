@@ -54,7 +54,7 @@ void Filter::setCutoff(double cutoff)
     /*if (_cutoff > _sampleRate / 2.0) {
         return;
     }*/
-    _cutoff = std::fmin(std::fmax(cutoff, 0.0), _sampleRate / 2.0);
+    _cutoff = std::fmin(std::fmax(cutoff, 1.0), (_sampleRate / 2.0) - 1.0);
     updateCoef();
 }
 
