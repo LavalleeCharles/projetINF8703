@@ -61,9 +61,6 @@ void Filter::setCutoff(double cutoff)
 
 void Filter::setResonance(double resonance)
 {
-    if (resonance >= 1.0) {
-        return;
-    }
     _resonance = resonance;
     updateCoef();
 }
@@ -84,7 +81,7 @@ double Filter::filterValue(double value)
     if (_filterType == noFilter) {
         out = value;
     } else {
-        out = (_b[0] * value + _b[1] * _prevIn[0] + _b[2] * _prevIn[1]) - (_a[0] * _prevOut[0] + _a[1] * _prevOut[1]);
+        out = (_b[0] * value + _b[1] * _prevIn[0] + _b[2] * _prevIn[1]) - (_a[0] * _prevOut[0] + _a[1] * _prevOut[1]); // fmax(out, 0.99) + fmin(out, -0.99) ?
         _prevIn[1] = _prevIn[0];
         _prevIn[0] = value;
         _prevOut[1] = _prevOut[0];

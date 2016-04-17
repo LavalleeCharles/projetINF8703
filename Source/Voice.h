@@ -51,10 +51,9 @@ private:
     Oscillateur _oscillateur;
     Envelope _envelope;
     Filter _filter;
-    double _filterCutoffValue ;
+    double _filterCutoffValue;
     Oscillateur _lfo;
     double _lfoAmount;
-    double _lfoFreqValue;
 
     int _note;
     int _velocity;

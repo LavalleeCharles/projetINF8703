@@ -19,7 +19,6 @@
 /*
 TODO: -- list --
  - Clean code (rename stuff)
- - LFO
  - normalize output? (polyphonic is too loud)
  - PolyBlep ?
  - remove hardCoded value in GUI

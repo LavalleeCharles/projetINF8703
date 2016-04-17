@@ -104,7 +104,6 @@ void Voice::setFilterCutoff(double cutoff)
 {
     _filter.setCutoff(cutoff);
     _filterCutoffValue = cutoff;
-    //_lfo.setFrequency(_lfoFreqValue);
 }
 
 
@@ -117,7 +116,6 @@ void Voice::setLfoWaveType(int waveType)
 
 void Voice::setLfoFrequency(double freq)
 {
-    _lfoFreqValue = freq;
     _lfo.setFrequency(freq);
     _filter.setCutoff(_filterCutoffValue);
 }
